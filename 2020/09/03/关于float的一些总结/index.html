@@ -17,10 +17,20 @@
   <meta name="description" content="你以为的光明，只是有人挡住了黑暗！">
   <meta name="author" content="">
   <meta name="keywords" content="渗透">
-  <title>Page not found - huahaiYa的小屋</title>
+  <title>关于float的一些总结 - huahaiYa的小屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+  
+
+  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -43,7 +53,7 @@
 
 
 <body>
-  <header style="height: 85vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -147,6 +157,40 @@
             </span>
 
             
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-09-03 13:31" pubdate>
+      September 3, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      710 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
           </div>
 
           
@@ -159,13 +203,127 @@
     
       
 
-<script>
-  function redirect() {
-    location.href = "/";
-  }
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">关于float的一些总结</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <p>Hello，这是我的第一篇博文哦，今天主要想记录关于浮点类型在内存中是怎么表现的，下面开始吧</p>
+<h1 id="float类型"><a href="#float类型" class="headerlink" title="float类型"></a>float类型</h1><p>浮点类型是c语言中的基本类型之一，float分为了有符号的和无符号的，在计算机的内存中没有符号之分，但是有正负之分，对于float类型来说正数和负数在内存中是不同的表现形式，下面就来看看吧！</p>
+<h2 id="flaot类型的表现形式"><a href="#flaot类型的表现形式" class="headerlink" title="flaot类型的表现形式"></a>flaot类型的表现形式</h2><p>float类型在计算机中的存储方式：</p>
+<table>
+<thead>
+<tr>
+<th>31 <del>~</del>30</th>
+<th>30<del>~</del>22</th>
+<th>22<del>~</del>0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>符号位（1位）</td>
+<td>指数部分（8位）</td>
+<td>尾数部分（23位）</td>
+</tr>
+</tbody></table>
+<p>可以看到在内存中float类型被分为了三部分进行计算，那么他的值是怎样进行填写的，主要由以下几个步骤</p>
+<p>1.将这种实数的绝对值转化为二进制</p>
+<p>2.将二进制形式的小数点左移或者右移n位，直到小数点移动到第一个有效数字的右边</p>
+<p>3.从小数点右边第一位开始输出二十三位放入第22位到0位</p>
+<p>4.如果实数是正的，则在第31位放入0，否则放入1</p>
+<p>5.如果n是左移得到的，说明指数是正的，那么第三十位放入1，如果n是右移得到的或者n=0，则第三十位放入0</p>
+<p>6、如果n是左移得到的，则将n减去1后化为二进制，并在左边加“0”补足七位，放入第29到第23位。 如果n是右移得到的或n=0，则将n化为二进制后在左边加“0”补足七位，再各位求反，再放入第29到第23位。                                        </p>
+<p>下面通过三个实例来说明一些转化过程</p>
+<h3 id="8-25转化为浮点存储"><a href="#8-25转化为浮点存储" class="headerlink" title="8.25转化为浮点存储"></a>8.25转化为浮点存储</h3><p>首先将实数部分进行转化：对8求余数进行转化二进制。</p>
+<p>求余               余数</p>
+<p>8/2 = 4              0</p>
+<p>4/2 = 2              0</p>
+<p>2/2  = 1             0</p>
+<p>1/2 = 0               1</p>
+<p>结果逆序为二进制的值，既 1000</p>
+<p>小数部分转化为二进制的值，对2进行乘法得整数位</p>
+<p>0.25 * 2 = 0.5        0</p>
+<p>0.5*2   =   1.0       1</p>
+<p>小数部分正序得到结果，最终转化为二进制： 1000.01</p>
+<p>最后对结果进行存储</p>
+<p>首先对小数点进行左移直到遇到第一个非0数既 1.00001 * 2的三次方，小数点左移了3位，指数为3  （第二步）</p>
+<p>（3）将小数位放到第23到0的位置，不足的补0；既00001000000000000000000</p>
+<p>（4）8为正数，所以第31位为0</p>
+<p>（5）前面已知小数位左移三位，所以将1放到第30位，并且将3-1=2的二进制放到29到23位 ，2的二进制为0000010</p>
+<p>所以最终的结果为</p>
+<p>0       10000010  00001000000000000000000</p>
+<p>转化为16进制为：41040000</p>
 
-  //setTimeout(redirect, 3000)
-</script>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">数据类型</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%80%86%E5%90%91%E5%88%86%E6%9E%90/">逆向分析</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/09/03/%E5%AF%BB%E6%89%BE%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">寻找局部变量</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
 
     
   </main>
@@ -270,6 +428,31 @@
 
 
 
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
 
 
   <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
@@ -277,7 +460,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Page not found&nbsp;",
+        "关于float的一些总结&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
@@ -292,6 +475,21 @@
 
 
 
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
 
 
   <script  src="/js/local-search.js" ></script>
@@ -305,6 +503,20 @@
   </script>
 
 
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
 
 
 
