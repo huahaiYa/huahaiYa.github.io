@@ -27,7 +27,7 @@
 
   
     
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/a11y-dark.min.css" />
   
 
   
@@ -263,7 +263,7 @@
 
 
 
-<div class="hljs"><pre><code>return a + b + c + x + y + z;</code></pre></div>
+<div class="hljs"><pre><code class="hljs c"><span class="hljs-keyword">return</span> a + b + c + x + y + z;</code></pre></div>
 <p>mov         eax,dword ptr [a]<br>add         eax,dword ptr [b]<br>add         eax,dword ptr [c]<br> add         eax,dword ptr [x]<br>add         eax,dword ptr [y]<br> add         eax,dword ptr [z]    返回值放到了eax中</p>
 <p>}<br> pop         edi<br>pop         esi<br>pop         ebx<br>add         esp,0E4h<br>cmp         ebp,esp<br>call        __RTC_CheckEsp (06B121Ch)<br>mov         esp,ebp<br> pop         ebp<br> ret  </p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在函数中对反汇编代码进行查看发现局部变量的值直接存放在内存中进行存储，后面直接对内存进行访问取值，但是参数的值是通过入栈的方式，并且其参数一般存放在了寄存器ebp+4的地址中</p>
