@@ -17,7 +17,7 @@
   <meta name="description" content="你以为的光明，只是有人挡住了黑暗！">
   <meta name="author" content="">
   <meta name="keywords" content="渗透">
-  <title>寻找局部变量 - huahaiYa的小屋</title>
+  <title>uploads靶场通关大全 - huahaiYa的小屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -160,8 +160,8 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-09-03 14:42" pubdate>
-      September 3, 2020 pm
+    <time datetime="2020-09-04 09:19" pubdate>
+      September 4, 2020 am
     </time>
   </div>
 
@@ -171,7 +171,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      414 字
+      964 字
     </span>
   
 
@@ -181,7 +181,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5
+      13
        分钟
     </span>
   
@@ -211,62 +211,86 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">寻找局部变量</h1>
+            <h1 style="display: none">uploads靶场通关大全</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="对c语言函数逆向"><a href="#对c语言函数逆向" class="headerlink" title="对c语言函数逆向"></a>对c语言函数逆向</h1><p>寻找函数中的局部变量以及参数的位置</p>
-<h2 id="小程序"><a href="#小程序" class="headerlink" title="小程序"></a>小程序</h2><div class="hljs"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fun</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b, <span class="hljs-keyword">int</span> c)</span></span>
-<span class="hljs-function"></span>&#123;
-
-	<span class="hljs-keyword">int</span> x = <span class="hljs-number">2</span>;
-	<span class="hljs-keyword">int</span> y = <span class="hljs-number">3</span>;
-	<span class="hljs-keyword">int</span> z = <span class="hljs-number">4</span>;
-
-	<span class="hljs-keyword">return</span> a + b + c + x + y + z;
-
+              <h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00  前言"></a>0x00  前言</h1><p>文件上传漏洞是web漏洞中常见漏洞之一，所以学习文件上传的各种姿势也是学习的目标，本篇博文将带领大家通关uploads靶场，练习和总结各种文件上传中的奇思妙想！</p>
+<h1 id="0x01-环境搭建"><a href="#0x01-环境搭建" class="headerlink" title="0x01  环境搭建"></a>0x01  环境搭建</h1><p>环境方面我使用了phpstudy集成工具进行搭建，组件是apache+mysql8.0，将uploads靶场放到www目录下，开启服务直接就可以访问了。</p>
+<ol>
+<li><p><a target="_blank" rel="noopener" href="https://www.xp.cn/">phpstudy网址</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/c0ny1/upload-labs"> uploads靶场</a></p>
+</li>
+</ol>
+<h1 id="0x03-突破靶场"><a href="#0x03-突破靶场" class="headerlink" title="0x03 突破靶场"></a>0x03 突破靶场</h1><p>下面开始进入正题了</p>
+<h2 id="第一关"><a href="#第一关" class="headerlink" title="第一关"></a>第一关</h2><p>任务：上传一个webshell到服务器</p>
+<p>1.准备一个png文件，里面写入一个一句话木马</p>
+<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\webshell.png" srcset="/img/loading.gif" alt="webshell"></p>
+<p>2.直接上传png文件</p>
+<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\QQ截图20200904093635.png" srcset="/img/loading.gif" alt="QQ截图20200904093635"></p>
+<p>下方出现了图片，表示上传成功</p>
+<p>3.修改文件后缀为php上传失败</p>
+<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\QQ截图20200904094023.png" srcset="/img/loading.gif" alt="QQ截图20200904094023"></p>
+<p>4.查看源码发现采用了前端js检测后缀的方法，采用burpsuite抓取数据包，之后修改后缀达到绕过的目的</p>
+<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\burp修改.png" srcset="/img/loading.gif" alt="burp修改"></p>
+<p>5.访问文件</p>
+<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\phpinfo.png" srcset="/img/loading.gif" alt="phpinfo"></p>
+<p>至此第一关结束</p>
+<p>总结：在第一关中使用了burpsuite截断数据包达到绕过前端js文件检测后缀的效果，所以使用前端检测的方式是不靠谱的哈。</p>
+<h2 id="第二关"><a href="#第二关" class="headerlink" title="第二关"></a>第二关</h2><p>第二关同样可以使用burpsuite截断绕过的方式进行绕过</p>
+<p>1.查看源码，进行简单的审计</p>
+<div class="hljs"><pre><code class="hljs php"><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>($_POST[<span class="hljs-string">&#x27;submit&#x27;</span>])) &#123;
+    <span class="hljs-keyword">if</span> (file_exists(UPLOAD_PATH)) &#123;
+        <span class="hljs-keyword">if</span> (($_FILES[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;type&#x27;</span>] == <span class="hljs-string">&#x27;image/jpeg&#x27;</span>) || ($_FILES[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;type&#x27;</span>] == <span class="hljs-string">&#x27;image/png&#x27;</span>) || ($_FILES[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;type&#x27;</span>] == <span class="hljs-string">&#x27;image/gif&#x27;</span>)) &#123;
+            $temp_file = $_FILES[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;tmp_name&#x27;</span>];
+            $img_path = UPLOAD_PATH . <span class="hljs-string">&#x27;/&#x27;</span> . $_FILES[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;name&#x27;</span>]            
+            <span class="hljs-keyword">if</span> (move_uploaded_file($temp_file, $img_path)) &#123;
+                $is_upload = <span class="hljs-literal">true</span>;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                $msg = <span class="hljs-string">&#x27;上传出错！&#x27;</span>;
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            $msg = <span class="hljs-string">&#x27;文件类型不正确，请重新上传！&#x27;</span>;
+        &#125;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        $msg = UPLOAD_PATH.<span class="hljs-string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;
+    &#125;
 &#125;
-
-
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
-<span class="hljs-function"></span>&#123;
-	
-	
-	fun(<span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>);
-
-
-
-	system(<span class="hljs-string">&quot;pause&quot;</span>);
-	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-
-
-
-&#125;</code></pre></div>
-
-<p>在fun函数处下断点，在vs2019中进行反调试</p>
-<div class="hljs"><pre><code class="hljs x86asm"><span class="hljs-keyword">push</span>        <span class="hljs-number">9</span>  
-<span class="hljs-keyword">push</span>        <span class="hljs-number">8</span>  
-<span class="hljs-keyword">push</span>        <span class="hljs-number">7</span>  
-<span class="hljs-keyword">call</span>        __vfprintf_l (<span class="hljs-number">06B13B6h</span>)  
-<span class="hljs-keyword">add</span>         <span class="hljs-built_in">esp</span>,<span class="hljs-number">0Ch</span>  
 </code></pre></div>
 
-<p>在fun函数入口处发现push操作  此时的esp寄存器地址为ESP = 004FFA34，f11单步进入call内，此时esp寄存器地址为ESP = 004FFA24，查看call内代码</p>
-<p>  <font color = red>push        ebp<br> mov         ebp,esp<br>  sub         esp,0E4h  </font></p>
-<p>此处提升了堆栈空间，将ebp的值和esp相等，所以参数的内存位置在esp-4.esp-8以及esp-c的位置</p>
-<p>push        ebx<br>push        esi     保存堆栈空间<br>push        edi<br>lea         edi,[ebp-0E4h]<br>mov         ecx,39h<br>mov         eax,0CCCCCCCCh    填充数据<br>rep stos    dword ptr es:[edi]<br>mov         ecx,offset _AC7D5F78_多文件@c (06BC010h)<br> call        @__CheckForDebuggerJustMyCode@4 (06B1212h)  </p>
-<font color=red> 
+<p>发现本关是对文件类型进行了检测，如果不是”image/jpeg,image/png,image/gif“就会报错。</p>
+<p>ok，只需要修改<font color=red>Content-Type</font>类型就可以了，由于我上传的时候是图片，所以默认就是image/png格式，所以成功进行了绕过</p>
+<h2 id="第三关"><a href="#第三关" class="headerlink" title="第三关"></a>第三关</h2><p>同样上传png格式图片，使用burp修改后缀后放包查看结果，发现不允许.asp,.aspx,.php,.jsp文件后缀，但是对于php服务器来说php1，PHP2,php3,等后缀文件同样可以解析成为php文件，所以只需要修改文件后缀为php1即可进行绕过</p>
+<img src="E:\Git_blog\huahaiYa\public\img\uploads\第三关.png" srcset="/img/loading.gif" alt="第三关" style="zoom:80%;" />
 
-<p>mov         dword ptr [x],2  </p>
-<p>mov         dword ptr [y],3     这里保存了局部变量的值，直接放到了内存中，后面直接进行了计算</p>
-<p>mov         dword ptr [z],4  </p>
-</font>
+<p>访问图片能够直接进行访问</p>
+<h2 id="第四关"><a href="#第四关" class="headerlink" title="第四关"></a>第四关</h2><p>1.查看源码</p>
+<div class="hljs"><pre><code class="hljs php"><span class="hljs-keyword">if</span> (<span class="hljs-keyword">isset</span>($_POST[<span class="hljs-string">&#x27;submit&#x27;</span>])) &#123;
+    <span class="hljs-keyword">if</span> (file_exists(UPLOAD_PATH)) &#123;
+        $deny_ext = <span class="hljs-keyword">array</span>(<span class="hljs-string">&quot;.php&quot;</span>,<span class="hljs-string">&quot;.php5&quot;</span>,<span class="hljs-string">&quot;.php4&quot;</span>,<span class="hljs-string">&quot;.php3&quot;</span>,<span class="hljs-string">&quot;.php2&quot;</span>,<span class="hljs-string">&quot;php1&quot;</span>,<span class="hljs-string">&quot;.html&quot;</span>,<span class="hljs-string">&quot;.htm&quot;</span>,<span class="hljs-string">&quot;.phtml&quot;</span>,<span class="hljs-string">&quot;.pht&quot;</span>,<span class="hljs-string">&quot;.pHp&quot;</span>,<span class="hljs-string">&quot;.pHp5&quot;</span>,<span class="hljs-string">&quot;.pHp4&quot;</span>,<span class="hljs-string">&quot;.pHp3&quot;</span>,<span class="hljs-string">&quot;.pHp2&quot;</span>,<span class="hljs-string">&quot;pHp1&quot;</span>,<span class="hljs-string">&quot;.Html&quot;</span>,<span class="hljs-string">&quot;.Htm&quot;</span>,<span class="hljs-string">&quot;.pHtml&quot;</span>,<span class="hljs-string">&quot;.jsp&quot;</span>,<span class="hljs-string">&quot;.jspa&quot;</span>,<span class="hljs-string">&quot;.jspx&quot;</span>,<span class="hljs-string">&quot;.jsw&quot;</span>,<span class="hljs-string">&quot;.jsv&quot;</span>,<span class="hljs-string">&quot;.jspf&quot;</span>,<span class="hljs-string">&quot;.jtml&quot;</span>,<span class="hljs-string">&quot;.jSp&quot;</span>,<span class="hljs-string">&quot;.jSpx&quot;</span>,<span class="hljs-string">&quot;.jSpa&quot;</span>,<span class="hljs-string">&quot;.jSw&quot;</span>,<span class="hljs-string">&quot;.jSv&quot;</span>,<span class="hljs-string">&quot;.jSpf&quot;</span>,<span class="hljs-string">&quot;.jHtml&quot;</span>,<span class="hljs-string">&quot;.asp&quot;</span>,<span class="hljs-string">&quot;.aspx&quot;</span>,<span class="hljs-string">&quot;.asa&quot;</span>,<span class="hljs-string">&quot;.asax&quot;</span>,<span class="hljs-string">&quot;.ascx&quot;</span>,<span class="hljs-string">&quot;.ashx&quot;</span>,<span class="hljs-string">&quot;.asmx&quot;</span>,<span class="hljs-string">&quot;.cer&quot;</span>,<span class="hljs-string">&quot;.aSp&quot;</span>,<span class="hljs-string">&quot;.aSpx&quot;</span>,<span class="hljs-string">&quot;.aSa&quot;</span>,<span class="hljs-string">&quot;.aSax&quot;</span>,<span class="hljs-string">&quot;.aScx&quot;</span>,<span class="hljs-string">&quot;.aShx&quot;</span>,<span class="hljs-string">&quot;.aSmx&quot;</span>,<span class="hljs-string">&quot;.cEr&quot;</span>,<span class="hljs-string">&quot;.sWf&quot;</span>,<span class="hljs-string">&quot;.swf&quot;</span>);
+        $file_name = trim($_FILES[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;name&#x27;</span>]);
+        $file_name = deldot($file_name);<span class="hljs-comment">//删除文件名末尾的点</span>
+        $file_ext = strrchr($file_name, <span class="hljs-string">&#x27;.&#x27;</span>);
+        $file_ext = strtolower($file_ext); <span class="hljs-comment">//转换为小写</span>
+        $file_ext = str_ireplace(<span class="hljs-string">&#x27;::$DATA&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>, $file_ext);<span class="hljs-comment">//去除字符串::$DATA</span>
+        $file_ext = trim($file_ext); <span class="hljs-comment">//收尾去空</span>
 
+        <span class="hljs-keyword">if</span> (!in_array($file_ext, $deny_ext)) &#123;
+            $temp_file = $_FILES[<span class="hljs-string">&#x27;upload_file&#x27;</span>][<span class="hljs-string">&#x27;tmp_name&#x27;</span>];
+            $img_path = UPLOAD_PATH.<span class="hljs-string">&#x27;/&#x27;</span>.date(<span class="hljs-string">&quot;YmdHis&quot;</span>).rand(<span class="hljs-number">1000</span>,<span class="hljs-number">9999</span>).$file_ext;
+            <span class="hljs-keyword">if</span> (move_uploaded_file($temp_file, $img_path)) &#123;
+                $is_upload = <span class="hljs-literal">true</span>;
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                $msg = <span class="hljs-string">&#x27;上传出错！&#x27;</span>;
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            $msg = <span class="hljs-string">&#x27;此文件不允许上传!&#x27;</span>;
+        &#125;
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        $msg = UPLOAD_PATH . <span class="hljs-string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;
+    &#125;</code></pre></div>
 
-
-<div class="hljs"><pre><code class="hljs c"><span class="hljs-keyword">return</span> a + b + c + x + y + z;</code></pre></div>
-<p>mov         eax,dword ptr [a]<br>add         eax,dword ptr [b]<br>add         eax,dword ptr [c]<br> add         eax,dword ptr [x]<br>add         eax,dword ptr [y]<br> add         eax,dword ptr [z]    返回值放到了eax中</p>
-<p>}<br> pop         edi<br>pop         esi<br>pop         ebx<br>add         esp,0E4h<br>cmp         ebp,esp<br>call        __RTC_CheckEsp (06B121Ch)<br>mov         esp,ebp<br> pop         ebp<br> ret  </p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在函数中对反汇编代码进行查看发现局部变量的值直接存放在内存中进行存储，后面直接对内存进行访问取值，但是参数的值是通过入栈的方式，并且其参数一般存放在了寄存器ebp+4的地址中</p>
+<p>发现在源码中把所有能解析的格式全部都过滤了</p>
 
             </div>
             <hr>
@@ -277,7 +301,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E5%8F%8D%E6%B1%87%E7%BC%96/">反汇编</a>
+                      <a class="hover-with-bg" href="/tags/%E9%9D%B6%E5%9C%BA/">靶场</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">文件上传</a>
                     
                   </div>
                 
@@ -290,18 +316,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">uploads靶场通关大全</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/09/03/%E5%85%B3%E4%BA%8Efloat%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/">
-                        <span class="hidden-mobile">关于float的一些总结</span>
+                      <a href="/2020/09/03/%E5%AF%BB%E6%89%BE%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/">
+                        <span class="hidden-mobile">寻找局部变量</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -466,7 +486,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "寻找局部变量&nbsp;",
+        "uploads靶场通关大全&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
