@@ -17,10 +17,20 @@
   <meta name="description" content="你以为的光明，只是有人挡住了黑暗！">
   <meta name="author" content="">
   <meta name="keywords" content="渗透">
-  <title>huahaiYa的小屋</title>
+  <title>if语句逆向学习 - huahaiYa的小屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/a11y-dark.min.css" />
+  
+
+  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -43,7 +53,7 @@
 
 
 <body>
-  <header style="height: 100vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -137,7 +147,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('/img/index.jpg') no-repeat center center;
+         style="background: url('/img/post.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -147,12 +157,42 @@
             </span>
 
             
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-09-27 17:30" pubdate>
+      September 27, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      562 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
           </div>
 
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
           
         </div>
       </div>
@@ -161,303 +201,210 @@
 
   <main>
     
-      <div class="container nopadding-md">
-        <div class="py-5" id="board"
-          style=margin-top:0>
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
 
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/09/28/wordpress%E8%AF%84%E8%AE%BA%E6%8F%92%E4%BB%B6wpdiscuz%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">wordpress评论插件wpdiscuz任意文件上传漏洞</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/09/28/wordpress%E8%AF%84%E8%AE%BA%E6%8F%92%E4%BB%B6wpdiscuz%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
-          
-          
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">if语句逆向学习</h1>
             
-          
-          前言本漏洞出现在wordpress的评论插件wpdiscuz上，其存在可上传任意类型的文件漏洞，包括php文件。
-漏洞复现环境：
-[wordpress-5.4.1]( https://pan.baidu.com/s/1VRfNnlTEiR3QU8oz3dXh2Q 提取码: 9j8e )
-[wpdiscuz7.0.3](链接: https://pan.baidu.com/s/1NBP6splxIqf
-        </a>
-      </p>
+            <div class="markdown-body" id="post-body">
+              <h1 id="IF语句"><a href="#IF语句" class="headerlink" title="IF语句"></a>IF语句</h1><p>在c语言中if语句是用来进行逻辑判断的，当语句匹配其中一个选项时，其他选项将不再进行执行，if语句有三种基础的表现形式，分别是</p>
+<ul>
+<li><p>IF(条件)</p>
+<p>{</p>
+<p>语句</p>
+<p>}</p>
+</li>
+<li><p>IF(条件)｛</p>
+<p>语句</p>
+<p>｝</p>
+<p>else{</p>
+</li>
+</ul>
+<p>  }</p>
+<ul>
+<li><p>IF（条件）｛</p>
+<p>语句</p>
+<p>｝</p>
+<p>else if (条件){</p>
+<p>语句</p>
+<p>}</p>
+<p>else {</p>
+<p>语句</p>
+<p>}</p>
+</li>
+</ul>
+<p>对于三种表现形式在汇编中表现不同，下面将通过例子对这三种形式进行分析</p>
+<h1 id="IF单条件语句"><a href="#IF单条件语句" class="headerlink" title="IF单条件语句"></a>IF单条件语句</h1><div class="hljs"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
+<span class="hljs-function"></span>&#123;
+	<span class="hljs-keyword">int</span>  a = <span class="hljs-number">1</span>;
+	<span class="hljs-keyword">int</span> b = <span class="hljs-number">2</span>;
+	<span class="hljs-keyword">if</span> (a &gt; b)
+	&#123;	
+		a = b + <span class="hljs-number">1</span>;
+		<span class="hljs-keyword">return</span> a;
+	
+	&#125;
+	system(<span class="hljs-string">&quot;pause&quot;</span>);
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-28 10:02" pubdate>
-              2020-09-28
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a>
-            
-              <a href="/tags/wordpress/">wordpress</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
+&#125;</code></pre></div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/09/27/if%E8%AF%AD%E5%8F%A5%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/">if语句逆向学习</a>
-      </h1>
+<p>在vs2019中对代码进行下断点分析</p>
+<div class="hljs"><pre><code class="hljs assembly">push        ebp  
+mov         ebp,esp  
+sub         esp,0D8h  提升堆栈空间
+push        ebx  
+push        esi  
+push        edi     保存现场
+lea         edi,[ebp-0D8h]  
+mov         ecx,36h  
+mov         eax,0CCCCCCCCh     填充数据
+rep stos    dword ptr es:[edi]  
+mov         ecx,offset _B0401CEC_if_test@c (074C00Ch)  
+call        @__CheckForDebuggerJustMyCode@4 (074120Dh)  
+前
 
-      <p class="index-excerpt">
-        <a href="/2020/09/27/if%E8%AF%AD%E5%8F%A5%E9%80%86%E5%90%91%E5%AD%A6%E4%B9%A0/">
-          
-          
-            
-          
-          IF语句在c语言中if语句是用来进行逻辑判断的，当语句匹配其中一个选项时，其他选项将不再进行执行，if语句有三种基础的表现形式，分别是
-
-IF(条件)
-{
-语句
-}
-
-IF(条件)｛
-语句
-｝
-else{
-
-
-  }
-
-IF（条件）｛
-语句
-｝
-else if (条件){
-语句
-}
-else {
-语句
-}
-
-
-对于三种表现形式在汇编中表现不同，下面将通过例子对这三种形式进行分析
-IF单条件语句in
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-27 17:30" pubdate>
-              2020-09-27
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/c%E8%AF%AD%E8%A8%80/">c语言</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/">uploads靶场通关大全</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/">
-          
-          
-            
-          
-          0x00  前言文件上传漏洞是web漏洞中常见漏洞之一，所以学习文件上传的各种姿势也是学习的目标，本篇博文将带领大家通关uploads靶场，练习和总结各种文件上传中的奇思妙想！
-0x01  环境搭建环境方面我使用了phpstudy集成工具进行搭建，组件是apache+mysql8.0，将uploads靶场放到www目录下，开启服务直接就可以访问了。
-
-phpstudy网址
-
- uploads靶场
-
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-04 09:19" pubdate>
-              2020-09-04
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E9%9D%B6%E5%9C%BA/">靶场</a>
-            
-              <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">文件上传</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/09/03/%E5%AF%BB%E6%89%BE%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/">寻找局部变量</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/09/03/%E5%AF%BB%E6%89%BE%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F/">
-          
-          
-            
-          
-          对c语言函数逆向寻找函数中的局部变量以及参数的位置
-小程序int fun(int a, int b, int c)
+int  a &#x3D; 1;
+mov         dword ptr [a],1  
+int b &#x3D; 2;
+mov         dword ptr [b],2  初始化变量
+if (a &gt; b)
+mov         eax,dword ptr [a]  
+cmp         eax,dword ptr [b]  
+jle         main+4Ch (074174Ch)  小于等于时跳转到												074174Ch	
 &#123;
 
-	int x = 2;
-	int y = 3;
-	int z = 4;
+	a &#x3D; b + 1;
+mov         eax,dword ptr [b]  
+add         eax,1  
+mov         dword ptr [a],eax  
+	return a;
+mov         eax,dword ptr [a]</code></pre></div>
 
-	return a + b + c + x + y + z;
-
+<p>在代码中找到if语句关键判断语句</p>
+<div class="hljs"><pre><code>if (a &gt; b)
+ mov         eax,dword ptr [a]  
+ cmp         eax,dword ptr [b]  
+ jle         main+4Ch (074174Ch)</code></pre></div>
+<p>首先会对传入的变量值进行比较（cmp），之后根据比较后寄存器中的值进行跳转操作。即以下流程：</p>
+<p>1.cmp 变量值 ，影响标志寄存器中的值</p>
+<p>2.jcc跳转      ，符合条件就跳转，不符合就继续执行</p>
+<p>在逻辑上和代码是相同的！</p>
+<h1 id="IF-else形式"><a href="#IF-else形式" class="headerlink" title="IF else形式"></a>IF else形式</h1><p>代码如下：</p>
+<div class="hljs"><pre><code class="hljs c"><span class="hljs-keyword">int</span>  a = <span class="hljs-number">1</span>;
+<span class="hljs-keyword">int</span> b = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">if</span> (a &gt; b)
+&#123;
+	a = b + <span class="hljs-number">1</span>;
+	<span class="hljs-keyword">return</span> a;	
 &#125;
+<span class="hljs-keyword">else</span> &#123;
+	a = b - a;
+	<span class="hljs-keyword">return</span> a;
 
+&#125;</code></pre></div>
 
-int main(void)
-&#123;
+<p>这里简单的判断a和b的值，然后进行跳转。反汇编中代码如下：</p>
+<div class="hljs"><pre><code class="hljs assembly">if (a &gt; b)
+00991736  mov         eax,dword ptr [a]  
+00991739  cmp         eax,dword ptr [b]  
+0099173C  jle         main+4Eh (099174Eh)  
+	&#123;
+	
+		a &#x3D; b + 1;
+0099173E  mov         eax,dword ptr [b]  
+00991741  add         eax,1  
+00991744  mov         dword ptr [a],eax  
+		return a;
+00991747  mov         eax,dword ptr [a]  
+		return a;
+0099174A  jmp         main+75h (0991775h)  
+	
+	&#125;
+0099174C  jmp         main+5Ch (099175Ch)  
+	else &#123;
 	
 	
-	fun(7, 8, 9);
-
-
-
-	system(&quo
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-03 14:42" pubdate>
-              2020-09-03
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%8F%8D%E6%B1%87%E7%BC%96/">反汇编</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/09/03/%E5%85%B3%E4%BA%8Efloat%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/">关于float的一些总结</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/09/03/%E5%85%B3%E4%BA%8Efloat%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/">
-          
-          
-            
-          
-          Hello，这是我的第一篇博文哦，今天主要想记录关于浮点类型在内存中是怎么表现的，下面开始吧
-float类型浮点类型是c语言中的基本类型之一，float分为了有符号的和无符号的，在计算机的内存中没有符号之分，但是有正负之分，对于float类型来说正数和负数在内存中是不同的表现形式，下面就来看看吧！
-flaot类型的表现形式float类型在计算机中的存储方式：
-
-
-
-31 ~30
-30~22
-22~
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-03 13:31" pubdate>
-              2020-09-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">数据类型</a>
-            
-              <a href="/tags/%E9%80%86%E5%90%91%E5%88%86%E6%9E%90/">逆向分析</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
+		a &#x3D; b - a;
+0099174E  mov         eax,dword ptr [b]  
+00991751  sub         eax,dword ptr [a]  
+00991754  mov         dword ptr [a],eax  
+		return a;
+00991757  mov         eax,dword ptr [a]</code></pre></div>
 
 
 
 
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/c%E8%AF%AD%E8%A8%80/">c语言</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/09/28/wordpress%E8%AF%84%E8%AE%BA%E6%8F%92%E4%BB%B6wpdiscuz%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">wordpress评论插件wpdiscuz任意文件上传漏洞</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/">
+                        <span class="hidden-mobile">uploads靶场通关大全</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
   </main>
 
@@ -561,6 +508,31 @@ flaot类型的表现形式float类型在计算机中的存储方式：
 
 
 
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
 
 
   <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
@@ -568,7 +540,7 @@ flaot类型的表现形式float类型在计算机中的存储方式：
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "时刻保有对低效率的自己的耐心。&nbsp;",
+        "if语句逆向学习&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
@@ -583,6 +555,21 @@ flaot类型的表现形式float类型在计算机中的存储方式：
 
 
 
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
 
 
   <script  src="/js/local-search.js" ></script>
@@ -596,6 +583,20 @@ flaot类型的表现形式float类型在计算机中的存储方式：
   </script>
 
 
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
 
 
 
