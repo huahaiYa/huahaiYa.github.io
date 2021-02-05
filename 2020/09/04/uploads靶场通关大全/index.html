@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-Hans" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -225,16 +225,16 @@
 <h1 id="0x03-突破靶场"><a href="#0x03-突破靶场" class="headerlink" title="0x03 突破靶场"></a>0x03 突破靶场</h1><p>下面开始进入正题了</p>
 <h2 id="第一关"><a href="#第一关" class="headerlink" title="第一关"></a>第一关</h2><p>任务：上传一个webshell到服务器</p>
 <p>1.准备一个png文件，里面写入一个一句话木马</p>
-<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\webshell.png" srcset="/img/loading.gif" alt="webshell"></p>
+<p><img src="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/Git_blog\huahaiYa\public\img\uploads\webshell.png" srcset="/img/loading.gif" alt="webshell"></p>
 <p>2.直接上传png文件</p>
-<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\QQ截图20200904093635.png" srcset="/img/loading.gif" alt="QQ截图20200904093635"></p>
+<p><img src="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/Git_blog\huahaiYa\public\img\uploads\QQ截图20200904093635.png" srcset="/img/loading.gif" alt="QQ截图20200904093635"></p>
 <p>下方出现了图片，表示上传成功</p>
 <p>3.修改文件后缀为php上传失败</p>
-<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\QQ截图20200904094023.png" srcset="/img/loading.gif" alt="QQ截图20200904094023"></p>
+<p><img src="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/Git_blog\huahaiYa\public\img\uploads\QQ截图20200904094023.png" srcset="/img/loading.gif" alt="QQ截图20200904094023"></p>
 <p>4.查看源码发现采用了前端js检测后缀的方法，采用burpsuite抓取数据包，之后修改后缀达到绕过的目的</p>
-<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\burp修改.png" srcset="/img/loading.gif" alt="burp修改"></p>
+<p><img src="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/Git_blog\huahaiYa\public\img\uploads\burp修改.png" srcset="/img/loading.gif" alt="burp修改"></p>
 <p>5.访问文件</p>
-<p><img src="E:\Git_blog\huahaiYa\public\img\uploads\phpinfo.png" srcset="/img/loading.gif" alt="phpinfo"></p>
+<p><img src="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/Git_blog\huahaiYa\public\img\uploads\phpinfo.png" srcset="/img/loading.gif" alt="phpinfo"></p>
 <p>至此第一关结束</p>
 <p>总结：在第一关中使用了burpsuite截断数据包达到绕过前端js文件检测后缀的效果，所以使用前端检测的方式是不靠谱的哈。</p>
 <h2 id="第二关"><a href="#第二关" class="headerlink" title="第二关"></a>第二关</h2><p>第二关同样可以使用burpsuite截断绕过的方式进行绕过</p>
@@ -259,9 +259,9 @@
 </code></pre></div>
 
 <p>发现本关是对文件类型进行了检测，如果不是”image/jpeg,image/png,image/gif“就会报错。</p>
-<p>ok，只需要修改<font color=red>Content-Type</font>类型就可以了，由于我上传的时候是图片，所以默认就是image/png格式，所以成功进行了绕过</p>
+<p>ok，只需要修改<font color="red">Content-Type</font>类型就可以了，由于我上传的时候是图片，所以默认就是image/png格式，所以成功进行了绕过</p>
 <h2 id="第三关"><a href="#第三关" class="headerlink" title="第三关"></a>第三关</h2><p>同样上传png格式图片，使用burp修改后缀后放包查看结果，发现不允许.asp,.aspx,.php,.jsp文件后缀，但是对于php服务器来说php1，PHP2,php3,等后缀文件同样可以解析成为php文件，所以只需要修改文件后缀为php1即可进行绕过</p>
-<img src="E:\Git_blog\huahaiYa\public\img\uploads\第三关.png" srcset="/img/loading.gif" alt="第三关" style="zoom:80%;" />
+<img src="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/Git_blog\huahaiYa\public\img\uploads\第三关.png" srcset="/img/loading.gif" alt="第三关" style="zoom:80%;">
 
 <p>访问图片能够直接进行访问</p>
 <h2 id="第四关"><a href="#第四关" class="headerlink" title="第四关"></a>第四关</h2><p>1.查看源码</p>

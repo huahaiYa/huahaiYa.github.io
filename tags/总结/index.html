@@ -17,20 +17,10 @@
   <meta name="description" content="你以为的光明，只是有人挡住了黑暗！">
   <meta name="author" content="">
   <meta name="keywords" content="渗透">
-  <title>寻找局部变量 - huahaiYa的小屋</title>
+  <title>Tags - 总结 - huahaiYa的小屋</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
-  
-    
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/a11y-dark.min.css" />
-  
-
-  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -53,7 +43,7 @@
 
 
 <body>
-  <header style="height: 70vh;">
+  <header style="height: 80vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -157,40 +147,6 @@
             </span>
 
             
-              
-  <div class="mt-3 post-meta">
-    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-09-03 14:42" pubdate>
-      September 3, 2020 pm
-    </time>
-  </div>
-
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      414 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      5
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
           </div>
 
           
@@ -201,136 +157,37 @@
 
   <main>
     
+      <div class="container nopadding-md">
+        <div class="py-5" id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<div class="list-group">
+  <p class="h4">1 posts in total.</p>
+  <hr>
+  
+    
       
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
-            <!-- SEO header -->
-            <h1 style="display: none">寻找局部变量</h1>
-            
-            <div class="markdown-body" id="post-body">
-              <h1 id="对c语言函数逆向"><a href="#对c语言函数逆向" class="headerlink" title="对c语言函数逆向"></a>对c语言函数逆向</h1><p>寻找函数中的局部变量以及参数的位置</p>
-<h2 id="小程序"><a href="#小程序" class="headerlink" title="小程序"></a>小程序</h2><div class="hljs"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fun</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b, <span class="hljs-keyword">int</span> c)</span></span>
-<span class="hljs-function"></span>&#123;
-
-	<span class="hljs-keyword">int</span> x = <span class="hljs-number">2</span>;
-	<span class="hljs-keyword">int</span> y = <span class="hljs-number">3</span>;
-	<span class="hljs-keyword">int</span> z = <span class="hljs-number">4</span>;
-
-	<span class="hljs-keyword">return</span> a + b + c + x + y + z;
-
-&#125;
-
-
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>
-<span class="hljs-function"></span>&#123;
-	
-	
-	fun(<span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>);
+      <p class="h5">2021</p>
+    
+    <a href="/2021/02/05/2021-%E6%89%AC%E5%B8%86%E8%B5%B7%E8%88%AA/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">2021 扬帆起航</span>
+      <time style="float: right;">02-05</time>
+    </a>
+  
+</div>
 
 
 
-	system(<span class="hljs-string">&quot;pause&quot;</span>);
-	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-
-
-
-&#125;</code></pre></div>
-
-<p>在fun函数处下断点，在vs2019中进行反调试</p>
-<div class="hljs"><pre><code class="hljs x86asm"><span class="hljs-keyword">push</span>        <span class="hljs-number">9</span>  
-<span class="hljs-keyword">push</span>        <span class="hljs-number">8</span>  
-<span class="hljs-keyword">push</span>        <span class="hljs-number">7</span>  
-<span class="hljs-keyword">call</span>        __vfprintf_l (<span class="hljs-number">06B13B6h</span>)  
-<span class="hljs-keyword">add</span>         <span class="hljs-built_in">esp</span>,<span class="hljs-number">0Ch</span>  
-</code></pre></div>
-
-<p>在fun函数入口处发现push操作  此时的esp寄存器地址为ESP = 004FFA34，f11单步进入call内，此时esp寄存器地址为ESP = 004FFA24，查看call内代码</p>
-<p>  <font color="red">push        ebp<br> mov         ebp,esp<br>  sub         esp,0E4h  </font></p>
-<p>此处提升了堆栈空间，将ebp的值和esp相等，所以参数的内存位置在esp-4.esp-8以及esp-c的位置</p>
-<p>push        ebx<br>push        esi     保存堆栈空间<br>push        edi<br>lea         edi,[ebp-0E4h]<br>mov         ecx,39h<br>mov         eax,0CCCCCCCCh    填充数据<br>rep stos    dword ptr es:[edi]<br>mov         ecx,offset _AC7D5F78_多文件@c (06BC010h)<br> call        @__CheckForDebuggerJustMyCode@4 (06B1212h)  </p>
-<font color="red"> 
-
-<p>mov         dword ptr [x],2  </p>
-<p>mov         dword ptr [y],3     这里保存了局部变量的值，直接放到了内存中，后面直接进行了计算</p>
-<p>mov         dword ptr [z],4  </p>
-</font>
-
-
-
-<div class="hljs"><pre><code class="hljs c"><span class="hljs-keyword">return</span> a + b + c + x + y + z;</code></pre></div>
-<p>mov         eax,dword ptr [a]<br>add         eax,dword ptr [b]<br>add         eax,dword ptr [c]<br> add         eax,dword ptr [x]<br>add         eax,dword ptr [y]<br> add         eax,dword ptr [z]    返回值放到了eax中</p>
-<p>}<br> pop         edi<br>pop         esi<br>pop         ebx<br>add         esp,0E4h<br>cmp         ebp,esp<br>call        __RTC_CheckEsp (06B121Ch)<br>mov         esp,ebp<br> pop         ebp<br> ret  </p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在函数中对反汇编代码进行查看发现局部变量的值直接存放在内存中进行存储，后面直接对内存进行访问取值，但是参数的值是通过入栈的方式，并且其参数一般存放在了寄存器ebp+4的地址中</p>
-
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/%E5%8F%8D%E6%B1%87%E7%BC%96/">反汇编</a>
-                    
-                  </div>
-                
               </div>
-              
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
-              
-              
-                <div class="post-prevnext row">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/09/04/uploads%E9%9D%B6%E5%9C%BA%E9%80%9A%E5%85%B3%E5%A4%A7%E5%85%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">uploads靶场通关大全</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2020/09/03/%E5%85%B3%E4%BA%8Efloat%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/">
-                        <span class="hidden-mobile">关于float的一些总结</span>
-                        <span class="visible-mobile">Next</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
             </div>
-
-            
-          </article>
+          </div>
         </div>
       </div>
-    </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
-  <div id="tocbot"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-
     
   </main>
 
@@ -434,31 +291,6 @@
 
 
 
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
-
 
 
   <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
@@ -466,7 +298,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "寻找局部变量&nbsp;",
+        "Tag - 总结&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
@@ -481,21 +313,6 @@
 
 
 
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
 
 
   <script  src="/js/local-search.js" ></script>
@@ -509,20 +326,6 @@
   </script>
 
 
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
 
 
 
