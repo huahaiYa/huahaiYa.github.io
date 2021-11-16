@@ -1,0 +1,451 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>木鱼</title><meta name="keywords" content="渗透测试,漏洞复现,漏洞挖掘,代码审计"><meta name="author" content="木鱼"><meta name="copyright" content="木鱼"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="木鱼">
+<meta property="og:url" content="http://top7.top/index.html">
+<meta property="og:site_name" content="木鱼">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://top7.top/img/avatar.png">
+<meta property="article:author" content="木鱼">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="漏洞复现">
+<meta property="article:tag" content="漏洞挖掘">
+<meta property="article:tag" content="代码审计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://top7.top/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://top7.top/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '木鱼',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-11-16 16:00:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    document.addEventListener('pjax:complete', detectApple)})(window)</script><link rel="stylesheet" href="/css/fish.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@latest/hexo/css/loading_style_1.css" ><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@latest/hexo/css/loading_style_2.css" ><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head><body>
+<div id='loader'>
+    
+    <div class="outer_box">
+    <div class='loader_overlay'></div>
+    <div class='loader_cogs'>
+        <div class='loader_cogs__top'>
+            <div class='top_part'></div>
+            <div class='top_part'></div>
+            <div class='top_part'></div>
+            <div class='top_hole'></div>
+        </div>
+        <div class='loader_cogs__left'>
+            <div class='left_part'></div>
+            <div class='left_part'></div>
+            <div class='left_part'></div>
+            <div class='left_hole'></div>
+        </div>
+        <div class='loader_cogs__bottom'>
+            <div class='bottom_part'></div>
+            <div class='bottom_part'></div>
+            <div class='bottom_part'></div>
+            <div class='bottom_hole'></div>
+        </div>
+        <p style="text-align:center">&nbsp;&nbsp;&nbsp;loading...</p>
+    </div>
+    </div>
+    
+</div>
+
+<script>
+    var endLoading = function () {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loader').classList.add("loading");
+    }
+    window.addEventListener('load',endLoading);
+</script>
+
+<div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('http://pic1.win4000.com/wallpaper/2020-08-21/5f3f3d10b054e.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">木鱼</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">木鱼</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/huahaiYa" target="_blank" title="Github"><i class="fab fa-github"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/posts/49982/" title="mssql注入学习">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mssql注入学习"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/49982/" title="mssql注入学习">mssql注入学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-09-01T07:53:20.000Z" title="发表于 2021-09-01 15:53:20">2021-09-01</time></span></div><div class="content">MSSQL简介：SQL Server是Microsoft开发的关系数据库管理系统（RDBMS）。 它是市场上最受欢迎的DBMS之一。    同时mssql数据库具有强大的存储过程能够执行不同的高级功能，从而成为攻击者的突破口，本文复习了mssql的基本语法以及日常渗透过程中的基础使用，下面开始学习！
+mssql默认安装数据库
+
+mastermaster 数据库记录了所有的 SQL Server 数据库系统的系统级信息，如用户帐户，配置设置，并存在所有其他数据库信息。
+modelmodel 数据库是一个模板数据库。每当创建一个新的数据库（包括系统数据库的TempDB），会创建一个以 Model 数据库为副本数据库，并更改成你创建数据库时所用的名称。
+msdbmsdb 数据库是 SQL Server 代理的数据库，用于配置警报使用 SQL Server 代理和预定作业等。
+tempdbtempddb 数据库是由 SQL Server 用于暂时存储数据的，这其中包含所有临时表，临时存储过程，并通过 SQL Server 生成任何其他临时存储需求。
+
+MSSQL语法mssql sql语法对大小 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/posts/62300/" title="mysql利用以及提权">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mysql利用以及提权"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/62300/" title="mysql利用以及提权">mysql利用以及提权</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-08-25T07:41:23.000Z" title="发表于 2021-08-25 15:41:23">2021-08-25</time></span></div><div class="content">前提mysql数据库是中小型企业中最常见的数据库之一，本文是对mysql在日常渗透过程中获取权限以及提权等操作的复现文，下面进入正题：
+以下是靶机环境介绍：
+
+靶机： Windows10 x64
+PHP版本：5.6
+Mysql版本：5.7
+Apache版本：2.4
+
+获取权限方法：0x0 union select 写shell1.利用条件（1） 对web目录具有写权限并且知道网站的绝对路径
+（2）secure_file_priv 的值为 空，即secure_file_priv=’’
+2.获取 secure_file_priv的值我们可以通过mysql查询语句获取secure_file_priv的值，语句如下：
+show global variables like “%secure%”;
+
+3.secure_file_priv的作用secure_file_priv 是用来限制 load dumpfile、into outfile、load_file() 函数在哪个目录下拥有上传或者读取文件的权限。也就是说我们写入文件，导出文件的操作都会受到这个参数的限制，相对应的secure_file_ ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/posts/32254/" title="mysql 学习">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mysql 学习"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/32254/" title="mysql 学习">mysql 学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-08-24T08:07:18.000Z" title="发表于 2021-08-24 16:07:18">2021-08-24</time></span></div><div class="content">mysql数据库是关系型数据库，一个关系型数据库由一个或数个表格组成，mysql数据库是树状结构，由数据库-》表-》列 结构组成，在查询数据时也要逐级继续查询！下面介绍mysql的一些基础的语法！
+MYSQL和PHP语法：
+​    CREATE DATABASE 数据库名;
+实例 ：创建数据库run
+CREATE DATABASE run;
+PHP代码操作数据库php中使用了 mysqli_query 创建或删除mysql数据库
+语法如下;
+123456789101112mysqli_query(connection,query,resultmode);connection  :指定要使用的mysql连接query：   要执行的sql语句         mysqli_connect()   连接数据库 语法如下： mysqli_connect(host, username, password, dbname,port, socket);host，username,password是必须的  
+
+php连接数据库代码1234567891011121314&lt;?php    $d ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/posts/15254/" title="使用工具筛选sql注入链接">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用工具筛选sql注入链接"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/15254/" title="使用工具筛选sql注入链接">使用工具筛选sql注入链接</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-08-18T04:18:05.000Z" title="发表于 2021-08-18 12:18:05">2021-08-18</time></span></div><div class="content">前言本文采用了三个github小工具组合筛选出可能存在sql注入的链接地址，方便对sql注入漏洞直接进行检测，以下工具需要使用go环境进行编译运行，请小伙伴自行下载，或者采用KALI系统（自带）进行运行。下面开始介绍！
+GO设置代理由于go原生下载环境访问github等地址速度较慢，所以可以采用设置代理的方式进行访问。
+1.使用 go version 指令获取go的版本信息
+
+go 的版本在1.13以上版本时，可使用以下命令继续设置代理
+12go env -w GO111MODULE=ongo env -w GOPROXY=https://goproxy.cn,direct
+
+其他版本
+12export GO111MODULE=onexport GOPROXY=https://goproxy.cn
+
+取消代理
+1go env -u GOPROXY
+
+最后可通过 go env 指令查看 代理是否已经设置成功
+工具一 GAU工具地址：https://github.com/lc/gau
+工具功能：枚举指定界面的所有的url链接。
+工具下载： 使用命令
+1go get -u -v github ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/posts/18977/" title="VAuditDemo重装漏洞复现">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VAuditDemo重装漏洞复现"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/18977/" title="VAuditDemo重装漏洞复现">VAuditDemo重装漏洞复现</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-08-11T06:07:06.000Z" title="发表于 2021-08-11 14:07:06">2021-08-11</time></span></div><div class="content">前言本专题是针对互联网已知漏洞进行复现分析的文章，如有错误，请各位师傅指正。
+漏洞环境搭建CMS下载链接：https://github.com/virink/VAuditDemo
+使用phpstudy进行安装搭建，放在phpstudy web根目录下即可
+漏洞分析由于本次分析漏洞为重装漏洞，所有首先查看install目录下的install.php文件。
+
+在行首位置判断了机器是否已经安装，已经安装就会退出
+下面都是一些关于权限的判断，是否可读可写，直到用户可以输入的地方，通过POST方式传入数据库相关的信息
+往下会发现$str_tmp变量拼接了许多的信息，并被写入到了/sys/config.php文件中，在$str_tmp中将前面POST的参数传入到了config.php文件中并且未经过任何的过滤，漏洞点就存在这里。
+1234567891011121314151617181920212223242526272829303132333435363738$dbhost = $_POST[&quot;dbhost&quot;];	$dbuser = $_POST[&quot;dbuser&q ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/posts/32181/" title="PHP代码审计之重装漏洞">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PHP代码审计之重装漏洞"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/32181/" title="PHP代码审计之重装漏洞">PHP代码审计之重装漏洞</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-08-11T03:08:37.000Z" title="发表于 2021-08-11 11:08:37">2021-08-11</time></span></div><div class="content">前言本文是PHP代码审计笔记的第一篇，接下来的一系列文章中将收集复现PHP代码审计课程中经典的各种漏洞环境，本文是博主的个人总结文章，如果文章有中任何错误，也请各位大佬指正！
+重装漏洞当我们管理者在安装完系统之后，如果没有对安装文件进行一个加锁或者删除或者在对系统是否安全文件进行校验时校验不当，导致绕过，就有可能被攻击者进行利用。
+危害1.重装系统漏洞可以对web业务系统进行重新安装，从而对系统的配置选项进行更改，如cms后台登陆密码等，可直接登陆后台等危害
+2.重装系统可以在安装选项时通过写入一句话木马等方式写入到系统配置文件中，导致系统被GETSHELl
+分类通过对网上已知重装漏洞类型的分类
+1.无验证安装
+系统没有对是否系统已经安装进行校验，访问安装文件后可以直接进行重新安装系统
+2.安装file步骤绕过
+系统通过get方式对系统进行安装，可以通过修改GET参数绕过系统已安装的限制，直接进入下一步
+3.变量覆盖导致重装
+例如验证的是否安装的参数为$islockfile 
+通过 GET，POST，cookie等方式提交一个变量名为$islockfile，将值为空，从而覆盖掉原有的值 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/posts/1926/" title="java基础-方法学习">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="java基础-方法学习"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/1926/" title="java基础-方法学习">java基础-方法学习</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-07-26T16:26:23.000Z" title="发表于 2021-07-27 00:26:23">2021-07-27</time></span></div><div class="content">什么是方法java方法是语句的集合，他们在一起组合执行一个功能
+1.方法是解决一类问题的步骤的有序集合
+2.方法包含于类或对象中
+3.方法在程序中被创建，在其他地方被引用
+方法的本意是功能块，就是为了实现某个功能的语句块的集合，一个方法最好只实现一个功能，便于后期的拓展
+1234567方法的形式：	修饰符 返回值类型 方法名(参数类型 参数名)&#123;		方法体						return 返回值;	&#125;
+
+
+修饰符:可选参数，定义了该方法的访问类型
+
+返回值类型:可选参数，方法有时候会有返回值，return语句所返回数据的类型和该字段要相符合，若无返回值则此字段为 void
+
+方法名:方法的实际名称，方法名和参数表共同标识了方法是哪个
+
+参数类型:参数只是一个占位符，当方法被调用时，数据传输值给参数，方法可以不包含参数
+形式参数：在函数中被定义时的参数为形式参数，仅做占位符使用，用户接受外部传入的数据
+实参：调用方法时传输到方法的参数
+
+方法体:方法中具体执行语句的序列，定义了该方法的功能
+1234567891011121314151617package method;pub ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/posts/3619/" title="信息收集笔记">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="信息收集笔记"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/3619/" title="信息收集笔记">信息收集笔记</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-07-15T07:36:05.000Z" title="发表于 2021-07-15 15:36:05">2021-07-15</time></span></div><div class="content">域名信息挖掘域名信息挖掘工作是渗透测试过程中信息收集阶段必不可少的一个环节，域名收集的多少代表了你能够测试站点的风险点有多少，通过在网站搭建过程中大家常用的习惯，我们将域名收集的工作划分为以下几个方向进行收集：
+目录型站点目录型站点指的是相同域名，但是不同的目录下却存在不同的环境搭建的站点，简单来说  当www.a.com/a是我们需要渗透的站点，那么www.a.com/b是 www.a.com/a 同级目录下的站点，那么b对于a来说就是一个全新的站点，我们就可以说b是a的目录型站点,
+www.a.com/a
+www.a.com/b
+挖掘方式:针对目录型站点一般是通过目录爆破，FUZZ等方式获取。
+端口型站点端口型站点是同一网站不同的端口可能存在不同的站点，例如  http://127.0.0.1:80端口存在一个网站，通过扫描我们发现了http://127.0.0.1:8080端口也存在了一个站点，这在渗透过程中时非常常见的，即同域名不同端口的站点 我们称为端口型站点，表现形式如下：
+http://127.0.0.1:80
+http://127.0.0.1:8080
+挖掘方式：端口型 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/posts/54235/" title="java基础-选择结构">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/HCLonely/hclonely.github.io/img/Butterfly/006.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="java基础-选择结构"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/54235/" title="java基础-选择结构">java基础-选择结构</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-07-08T07:00:47.000Z" title="发表于 2021-07-08 15:00:47">2021-07-08</time></span></div><div class="content">IF选择结构if选择结构是java最基础的选择结构之一，IF语句共分为IF单选择语句，IF双选择语句以及IF多选择结构
+IF单选择语句表达式语法如下：
+12345678910	if(布尔表达式）&#123;					语句					&#125;当布尔表达式为真时，执行结构体中的语句，为假时则直接跳过！
+
+1234567891011121314151617181920import java.util.Scanner;public class Demo1 &#123;    public static void main(String[] args) &#123;        Scanner scanner = new Scanner(System.in);        String s = scanner.nextLine();        //判斷s的值和hello是否相等，相等時執行hello world ，不相等時則直接執行end        if ( s.equals(&quot;hello&quot;))&#123;            System.out.print ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/posts/62393/" title="学习Scanner对象">     <img class="post_bg" src="https://s3.jpg.cm/2021/07/08/I5ZkzC.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="学习Scanner对象"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/62393/" title="学习Scanner对象">学习Scanner对象</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2021-07-08T06:03:04.000Z" title="发表于 2021-07-08 14:03:04">2021-07-08</time></span></div><div class="content">Scanner对象Scanner类可以用来获取用户的输入信息，控制用户的交互内容。
+首先创建一个Scanner对象
+1Scanner scanner = new Scanner(System.in)
+
+这样我们就可以使用scanner对象获取用户输入了
+hasnext以及hasNextLine两种方法的差异hasnext以及hasnextline 方法都是获取是否还有输入的方法，但是两者也有一些区别
+next方法：
+​    1.一定要读取到有效字符后才可以结束输入
+​    2.遇到空格时，之后输入的内容会自动去掉
+​    3.只有输入有效内容后后面的空格才会被当做分隔符或结束符号
+​    4.NEXT()不能得到带有空格的字符串
+总结来说 next方法当遇到空格时就没得办法了，但是在实际的字符串中空格却很常见，例如外国人的名字等，所以实用性不大，那么nextline方法就能够有效解决该问题
+nextline方法：
+1.以Enter为结束符，接受回车之前所有的字符
+2.可以获取空白内容
+简单来说nextline是next的加强版本,推荐使用
+简单小实例1下面实例为scanner的 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">木鱼</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huahaiYa"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/huahaiYa" target="_blank" title="Github"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">欢迎来到木鱼的小屋！</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/49982/" title="mssql注入学习"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mssql注入学习"/></a><div class="content"><a class="title" href="/posts/49982/" title="mssql注入学习">mssql注入学习</a><time datetime="2021-09-01T07:53:20.000Z" title="发表于 2021-09-01 15:53:20">2021-09-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/62300/" title="mysql利用以及提权"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mysql利用以及提权"/></a><div class="content"><a class="title" href="/posts/62300/" title="mysql利用以及提权">mysql利用以及提权</a><time datetime="2021-08-25T07:41:23.000Z" title="发表于 2021-08-25 15:41:23">2021-08-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/32254/" title="mysql 学习"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mysql 学习"/></a><div class="content"><a class="title" href="/posts/32254/" title="mysql 学习">mysql 学习</a><time datetime="2021-08-24T08:07:18.000Z" title="发表于 2021-08-24 16:07:18">2021-08-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/15254/" title="使用工具筛选sql注入链接"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用工具筛选sql注入链接"/></a><div class="content"><a class="title" href="/posts/15254/" title="使用工具筛选sql注入链接">使用工具筛选sql注入链接</a><time datetime="2021-08-18T04:18:05.000Z" title="发表于 2021-08-18 12:18:05">2021-08-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/18977/" title="VAuditDemo重装漏洞复现"><img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VAuditDemo重装漏洞复现"/></a><div class="content"><a class="title" href="/posts/18977/" title="VAuditDemo重装漏洞复现">VAuditDemo重装漏洞复现</a><time datetime="2021-08-11T06:07:06.000Z" title="发表于 2021-08-11 14:07:06">2021-08-11</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/mysql/" style="font-size: 1.1em; color: #999">-mysql</a> <a href="/tags/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 1.1em; color: #999">PHP代码审计</a> <a href="/tags/SQL%E6%B3%A8%E5%85%A5/" style="font-size: 1.1em; color: #999">SQL注入</a> <a href="/tags/java%E5%9F%BA%E7%A1%80/" style="font-size: 1.5em; color: #99a9bf">java基础</a> <a href="/tags/mysql/" style="font-size: 1.1em; color: #999">mysql</a> <a href="/tags/tools%E4%BD%BF%E7%94%A8/" style="font-size: 1.1em; color: #999">tools使用</a> <a href="/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" style="font-size: 1.1em; color: #999">信息收集</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" style="font-size: 1.1em; color: #999">漏洞复现</a> <a href="/tags/%E9%80%89%E6%8B%A9%E7%BB%93%E6%9E%84/" style="font-size: 1.1em; color: #999">选择结构</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/09/"><span class="card-archive-list-date">九月 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">八月 2021</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/07/"><span class="card-archive-list-date">七月 2021</span><span class="card-archive-list-count">4</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">10</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-11-10T16:00:00.000Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">21.3k</div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-11-16T08:00:43.526Z"></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By 木鱼</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎来到木鱼的小屋哦！</div></div><div class="container" id="jsi-flying-fish-container"><script src="/js/fish.js"></script></div><style>   @media only screen and (max-width: 767px){
+   #sidebar_search_box input[type=text]{width:calc(100% - 24px)}
+}</style></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">2</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function subtitleType () {
+  getScript('https://sdk.jinrishici.com/v2/browser/jinrishici.js').then(() => {
+    jinrishici.load(function (result) {
+      if (true) {
+        var sub = "".length == 0 ? new Array() : "".split(',')
+        var content = result.data.content
+        var both = sub.unshift(content)
+        var typed = new Typed('#subtitle', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('subtitle').innerHTML = result.data.content
+      }
+    })
+  })
+}
+
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}
+</script></div><script src="/js/jq.js"></script><script data-pjax defer src="/js/fish.js"></script><script src="/js/cursor.js"></script><div class="aplayer no-destroy" data-id="000PeZCQ1i4XVs" data-server="tencent" data-type="artist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="true" muted></div><script id="canvas_nest" defer="defer" color="0,200,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="false" data-text="富强,民主,和谐,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="true" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  '#config-diff',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.removeEventListener('scroll', window.tocScrollFn)
+  window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/tzy13755126023/BLOG_SOURCE/theme_f/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_injector_config();
+  }
+  </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax src="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/nietzche.model.json"},"display":{"position":"right","width":150,"height":300,"hOffset":20,"vOffset":-20},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
